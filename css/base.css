@@ -1,0 +1,166 @@
+@charset 'utf-8';
+/*----reset重置----*/
+
+/*public*/
+
+* {
+  line-height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 20px;
+  height: 100%;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, 'STHeiTi', sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /*用于解决ios滚动时卡顿*/
+  height: 100%;
+  background: #eee;
+}
+
+li {
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+b,
+strong {
+  font-weight: normal;
+}
+
+i,
+em {
+  font-style: normal;
+}
+
+a {
+  text-decoration: none;
+}
+
+img {
+  vertical-align: middle;
+}
+
+a img {
+  display: block;
+  border: none;
+}
+
+input {
+  border: none;
+  outline: none;
+  background: none;
+}
+
+textarea {
+  resize: none;
+  outline: none;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+}
+
+.clearfix:after {
+  display: block;
+  clear: both;
+  content: '';
+}
+
+.clearfix {
+  *zoom: 1;
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+/*others*/
+
+html,
+body {
+  -webkit-user-select: none;
+  /* 禁止选中文本(如无文本选中需求,此为必选项) */
+  user-select: none;
+}
+
+a,
+input {
+  -webkit-appearance: none;
+  /*屏蔽阴影*/
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  /*ios android去除自带阴影的样式*/
+}
+
+a,
+img {
+  -webkit-touch-callout: none;
+  /* 禁止长按链接与图片弹出菜单 */
+}
+
+/*palceholder*/
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #9e9e9e;
+}
+
+input:-moz-placeholder,
+textarea:-moz-placeholder {
+  color: #9e9e9e;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  color: #9e9e9e;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #9e9e9e;
+}
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: #F5F5F5;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+/*定义滑块 内阴影+圆角*/
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #555;
+}
