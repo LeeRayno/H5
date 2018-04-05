@@ -2,7 +2,7 @@
  * @Author: LeeRay
  * @Date: 2018-03-03 13:12:59
  * @Last Modified by: LeeRay
- * @Last Modified time: 2018-03-03 13:21:25
+ * @Last Modified time: 2018-04-05 21:58:36
  */
 
 // 常用工具函数整理
@@ -20,12 +20,23 @@ export const getQueryString = name => {
 }
 
 /**
- * @desc 补零
- * @param {Number} n
+ * @desc min - max 之间的整数
+ * @param {Number} min
+ * @param {Number} max
  * @returns {Number}
  */
+export const rnd = (min, max) => {
+	return Math.floor(Math.random() * (max - min)  + min)
+}
+
+/**
+ * @desc 补零
+ * @param {Number} n
+ * @returns {String}
+ */
 export const toDub = n => {
-	return n < 10 ? '0' + n : '' + n
+	return ('0' + n).slice(-2)
+	// return n < 10 ? '0' + n : '' + n
 }
 
 /**
@@ -90,7 +101,7 @@ export const removeCookie = name => {
  * @returns {Boolean}
  */
 export const hasClass = (ele, cls) => {
-	if ('classList' in ele) {
+	if (ele.classList) {
 		return ele.classList.contains(cls)
 	} else {
 		const reg = new RegExp('\\b' + cls + '\\b')
@@ -104,7 +115,7 @@ export const hasClass = (ele, cls) => {
  * @param {String} cls
  */
 export const addClass = (ele, cls) => {
-	if ('classList' in ele) {
+	if (ele.classList) {
 		ele.classList.add(cls)
 	} else {
 		if (!hasClass(ele, cls)) {
@@ -119,7 +130,7 @@ export const addClass = (ele, cls) => {
  * @param {String} cls
  */
 export const removeClass = (ele, cls) => {
-	if ('classList' in ele) {
+	if (ele.classList) {
 		ele.classList.remove(cls)
 	} else {
 		if (hasClass(ele, cls)) {
@@ -138,7 +149,7 @@ export const removeClass = (ele, cls) => {
  * @param {String} cls
  */
 export const toggleClass = (ele, cls) => {
-	if ('classList' in ele) {
+	if (ele.classList) {
 		ele.classList.toggle(cls)
 	} else {
 		hasClass(ele, cls) ? removeClass(ele, cls) : addClass(ele, cls)
