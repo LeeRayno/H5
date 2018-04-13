@@ -2,7 +2,7 @@
  * @Author: LeeRay
  * @Date: 2018-03-03 13:12:59
  * @Last Modified by: LeeRay
- * @Last Modified time: 2018-04-05 21:58:36
+ * @Last Modified time: 2018-04-13 14:16:19
  */
 
 // 常用工具函数整理
@@ -191,3 +191,22 @@ export const throttle = (cb, delay = 300) => {
 		}
 	}
 }
+
+/**
+ * @desc requestAnimation polyfill
+ */
+export const requestAnimationFrame = (() => {
+  return window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    function(cb) {
+      return setTimeout(cb, 16)
+    }
+})()
+
+export const cancelAnimationFrame = (() => {
+  return window.cancelAnimationFrame ||
+    window.webkitCancelAnimationFrame ||
+    function(id){
+      return clearTimeout(id)
+    }
+})()
