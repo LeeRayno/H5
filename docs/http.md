@@ -72,3 +72,31 @@ HTTP 缓存分为强制缓存和协商缓存
 
 1. F5 刷新，浏览器会设置 `Cathce-Control: max-age=0`，跳过强制缓存判断，会进行协商缓存判断
 2. Ctrl + F5 强制刷新，跳过强制缓存和协商缓存，直接从服务器获取资源
+
+## HTTP 状态码
+
+### 2xx 成功
+
+* 200 OK, 表示客户端发来的请求在服务端被正确处理
+* 204 Content, 标识请求成功，但响应报文不含实体主题部分
+* 206 Partial Content, 进行范围请求
+
+### 3xx 重定向
+
+* 301 Moved Permanently, 永久重定向，表示资源已被分配了新的URL
+* 302 Found, 临时重定向，表示资源被临时分配了新的URL
+* 303 See Other, 表示资源存在着另一个URL，应使用GET 方法获取资源
+* 304 Not Modified, 协商缓存
+* 307 Temporay Redirect 临时重定向，和302一样
+
+### 4xx 客户端错误
+
+* 400 Bad Request 请求报文存在语法错误
+* 401 UnAuthorized, 未认证，没有权限
+* 403 Forbidden, 表示拒绝访问
+* 404 Not Found, 资源不存在
+
+### 5xx 服务端错误
+
+* 500 Internal Server Error, 服务端错误
+* 503 Service Unavaliable, 表示服务器暂时处于超负载或停机维护，无法处理请求
