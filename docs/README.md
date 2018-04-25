@@ -49,3 +49,19 @@ function debounce(cb, delay=300){
 ## 原型链
 
 > 对象在查找某一个属性时，先找自己，没有找到再依次往上面找，就形成了原型链
+
+## GET & POST
+
+> GET 和 POST 的区别 [原文链接](https://sunshinevvv.coding.me/blog/2017/02/09/HttpGETv.s.POST/)
+
+| 方法 | GET | POST |
+| ---- | ----- | ---- |
+| 后退按钮/刷新 | 无害 | 数据会被重新提交(浏览器应该告知用户数据会被重新提交) |
+| 书签 | 可收藏为书签 | 不可收藏为书签 |
+| 历史 | 参数保留在浏览器历史中 | 参数不会保存在浏览器历史中 |
+| 缓存 | 能被缓存 | 不能被缓存 |
+| 编码类型 | application/x-www-form-urlencoded | application/x-www-form-urlencoded 或 multipart/form-data。为二进制数据使用多重编码 |
+| 对数据长度的限制 | 是的。当发送数据时，GET 方法向 URL 添加数据；URL 的长度是受限制的(URL的最大长度是2048个字符) | 无限制 |
+| 对数据类型的限制 | 只允许 ASCII 字符 | 没有限制，也允许二进制数据 |
+| 安全性 | 与 POST 相比，GET 的安全性较差，因为所发送的数据时 URL 的一部分，在发送密码或其他敏感信息时绝不要使用GET | POST 比 GET 更安全，因为参数不会被保存在浏览器历史中或 web 服务器日志中 |
+| 可见性 | 数据在 URL 中对所有人都是可见的 | 数据不会显示在 URL 中 |
