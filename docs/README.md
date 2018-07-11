@@ -1,4 +1,4 @@
-# 面试笔记
+# 笔记
 
 该文档采用 [docute](https://github.com/egoist/docute) 编写
 
