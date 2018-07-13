@@ -34,3 +34,27 @@ const b = 0.3
 numbersCloseEnoughTOEqual(a, b) // true
 numbersCloseEnoughTOEqual(0.000001, 0.000002) // fasle
 ```
+
+## [[Class]]
+
+> 所有 typeof 返回值为 "object" 的对象（如数组）都包含一个内部属性 [[Class]]
+
+``` js
+Object.prototype.toString.call(null)  // "[object Null]"
+
+Object.prototype.toString.call(undefined) // "[object Undefined]"
+
+Object.prototype.toString.call('abc')  // "[object String]"
+
+Object.prototype.toString.call(123)  // "[object Number]"
+
+Object.prototype.toString.call(true) // "[object Boolean]"
+
+Object.prototype.toString.call([])  // "[object Array]"
+
+Object.prototype.toString.call({}) // "[object Object]"
+
+Object.prototype.toString.call(/a/i) // "[object RegExp]"
+
+Object.prototype.toString.call(function() {}) // "[object Function]"
+```
