@@ -33,6 +33,14 @@ const a = 0.1 + 0.2
 const b = 0.3
 numbersCloseEnoughTOEqual(a, b) // true
 numbersCloseEnoughTOEqual(0.000001, 0.000002) // fasle
+
+// 元转分 
+279.4 * 100
+27939.999999999996
+
+// 解决方案 先toFixed一下，再Number
+Number((279.4 * 100).toFixed(2))
+// 27940
 ```
 
 ## [[Class]]
