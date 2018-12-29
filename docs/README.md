@@ -79,3 +79,58 @@ function debounce(cb, delay=300){
 * 懒加载
 * 组件路由级别的代码分割
 * 防抖(debounce)、节流(throttle)
+
+## reflow、repaint
+
+> 回流、重绘 [原文链接](https://segmentfault.com/a/1190000008849210) 
+
+<p class="warning">
+回流一定会触发重绘，重绘不一定会回流
+</p>
+
+浏览器渲染过程：
+
+1. parse HTML 解析 HTML 生成 DOM Tree
+2. parse CSS 解析 CSS 生成 CSSOM Tree
+3. 组合 HTML Tree 和 CSSOM Tree 构建 Render Tree
+4. reflow 根据 Render Tree 计算每个可见元素的布局(Layout)，即几何属性
+5. repaint 通过绘制流程，将每个元素渲染到屏幕上
+
+### reflow
+
+reflow 在渲染过程中称为回流，发生在 Render Tree 阶段，它主要用来确定每个元素在屏幕上的几何属性(位置，大小等)，需要大量计算，**每改变一个元素几何属性，均会发生一次回流**
+
+### repaint
+
+erpaint 在渲染过程称为重绘，发生在reflow 之后，当元素的集合属性确定之后便要开始将元素绘制在屏幕上，repaint 执行过程就是将元素的色彩(背景色，颜色等)属性绘制出来，**每改变一次颜色属性，均会对相关元素执行一次重绘**
+
+#### 如何触发回流，重绘
+
+1. 改变元素 `fontSize`:
+```js
+ele.style.fontSize = '10px' // reflow, repaint
+```
+
+2. 改变元素盒模型(几何尺寸)width, padding,  margin, border
+```js
+ele.style.width = '100px' // reflow, repaint
+ele.style.margin = '100px' // reflow, repaint
+ele.style.padding = '100px' // reflow, repaint
+ele.style.border = '1px solid red' // reflow, repaint
+```
+
+3. 改变元素颜色、背景色等
+```js
+ele.style.color = 'red' // repaint
+ele.style.backgroundColor = 'blue' // repaint
+```
+
+4. 特殊 `offset*`、`scroll*`、`client*`、`getComputedStyle`、`currentStyle`
+
+#### 如何减少回流，重绘
+1. 减少 JS 逐行修改元素样式
+
+```js
+ele.classList.add('className')
+```
+2. 减少样式的重新计算，即减少 `offset`、`scroll`、`client*`、`getComputedStyle`、`currentStyle` 的使用，因为每次调用都会刷新操作缓冲区，执行 reflow & repaint。
