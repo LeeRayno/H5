@@ -134,3 +134,51 @@ ele.style.backgroundColor = 'blue' // repaint
 ele.classList.add('className')
 ```
 2. 减少样式的重新计算，即减少 `offset`、`scroll`、`client*`、`getComputedStyle`、`currentStyle` 的使用，因为每次调用都会刷新操作缓冲区，执行 reflow & repaint。
+
+## Promise
+
+简易实现promise [原文链接](https://levelup.gitconnected.com/understand-javascript-promises-by-building-a-promise-from-scratch-84c0fd855720)
+
+```js
+class PromiseSimple {
+
+  constructor(excuteFn) {
+    this.promiseChainFns = []
+    this.handleError = () => {}
+
+    this.resolve = this.resolve.bind(this)
+    this.reject = this.reject.bind(this)
+
+    this.excuteFn(this.resolve, this.reject)
+  }
+
+  then(fn) {
+    this.promiseChainFns.push(fn)
+
+    return this
+  }
+
+  catch(handleError) {
+    this.handleError = handleError
+
+    return this
+  }
+
+  resolve(v) {
+    try {
+      let storeValue = v
+      this.promiseChainFns.forEach(fn => {
+        storeValue = fn(storeValue)
+      })
+    } catch(error) {
+      this.promiseChainFns = []
+
+      this.reject(error)
+    }
+  }
+
+  reject(error) {
+    this.handleError(error)
+  }
+}
+```

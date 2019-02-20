@@ -2,7 +2,7 @@
  * @Author: LeeRay
  * @Date: 2018-03-03 13:12:59
  * @Last Modified by: LeeRay
- * @Last Modified time: 2018-04-13 14:16:19
+ * @Last Modified time: 2019-02-20 14:22:26
  */
 
 // 常用工具函数整理
@@ -183,10 +183,9 @@ export const debounce = (cb, delay = 300) => {
 export const throttle = (cb, delay = 300) => {
 	let previous = 0
 	return function(...args) {
-		const now = +new Date()
-		const context = this
+		const now = Date.now()
 		if (now - previous > delay) {
-			cb && cb.apply(context, args)
+			cb && cb.apply(this, args)
 			previous = now
 		}
 	}
@@ -196,17 +195,17 @@ export const throttle = (cb, delay = 300) => {
  * @desc requestAnimation polyfill
  */
 export const requestAnimationFrame = (() => {
-  return window.requestAnimationFrame ||
+	return window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     function(cb) {
-      return setTimeout(cb, 16)
+    	return setTimeout(cb, 16)
     }
 })()
 
 export const cancelAnimationFrame = (() => {
-  return window.cancelAnimationFrame ||
+	return window.cancelAnimationFrame ||
     window.webkitCancelAnimationFrame ||
     function(id){
-      return clearTimeout(id)
+    	return clearTimeout(id)
     }
 })()
