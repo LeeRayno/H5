@@ -182,3 +182,85 @@ class PromiseSimple {
   }
 }
 ```
+## call、apply、bind
+
+:100: 简易实现call、apply、bind [参考原文](https://segmentfault.com/a/1190000014448674)
+
+```js
+/**
+ * call
+ * 
+ * o1.fn.call(o2)
+ * 将 fn 里面的 this 指向 o2, 即方法借用
+ * 核心思想就是 o2 没有 fn 这个方法，那我们给 o2 创建一个 方法 等于 fn不就可以了.
+ * 
+ * fn.mycall(o2)
+ * 
+*/
+
+Function.prototype.mycall = function(ctx, ...args) {
+  const hash = Date.now() // 避免 ctx 有 某个特定的属性而产生冲突 如： ctx.fn 所以采用时间戳避免属性名重复
+  ctx[hash] = this // 即给 ctx 加个 方法 这个方法就是 fn 实例
+
+  const res = ctx[hash](...args)
+
+  delete ctx[hash]
+
+  return res
+}
+
+/**
+ * apply 思想一致，只是接收参数为数组
+*/
+
+Function.prototype.myapply = function(ctx, args = []) {
+  const hash = Date.now()
+
+  ctx[hash] = this
+
+  const res = ctx[hash](...args)
+
+  delete ctx[hash]
+
+  return res
+}
+
+/**
+ * bind
+ * 
+ *一个函数被 bind 之后，以后无论怎么调用 call、apply、bind, this 指向都不会变，都是第一 bind 的上下文，因为他始终返回 ctx.fn 执行之后的值，即闭包原理
+ * 借用 apply 实现 
+ * 
+ * 如需要考虑 关键字 new 轻参照 MDN上面实现
+ * 
+*/
+
+Function.prototype.mybind = function(ctx, ...args1) {
+  const _this = this
+
+  return function(...args2) {
+    // apply 可以参照上面实现
+    return _this.apply(ctx, args1.concat(args2)) // 将 bind 的参数和 执行时的参数合并
+  }
+}
+
+// 测试
+
+const a = {
+  name: 'a',
+  fn: function() {
+    console.log(this.name)
+    // console.log(arguments.length)
+  }
+}
+
+const b = {
+  name: 'b'
+}
+
+a.fn.mycall(b, 1,2)
+a.fn.myapply(b, [1,2])
+a.fn.mybind(b,1,2)(3,4)
+// b
+
+```
