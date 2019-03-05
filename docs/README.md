@@ -264,3 +264,36 @@ a.fn.mybind(b,1,2)(3,4)
 // b
 
 ```
+
+## 柯里化
+
+
+柯里化（Currying）,维基百科上的解释是，把接受多个参数的函数转换成接受一个单一参数的函数 [参考原文](https://www.jqhtml.com/33137.html)
+
+
+```js
+
+function add(a, b, c) {
+  return a + b + c
+}
+
+function currying(fn, ...args) {
+  const { length } = fn
+  let allArgs = []
+
+  return function t(...args1) {
+    allArgs = allArgs.concat(...args, ...args1)
+
+    // 如果参数 大于等于 fn 得参数 就 执行
+    return allArgs.length >= length
+      ? fn.apply(this, allArgs)
+      : t
+  }
+}
+
+// 测试
+const _add = currying(add)
+
+console.log(_add(1)(2)(3)) 
+// 6
+```
