@@ -196,7 +196,7 @@ class PromiseSimple {
  * 
  * fn.mycall(o2)
  * 
-*/
+ */
 
 Function.prototype.mycall = function(ctx, ...args) {
   const hash = Date.now() // 避免 ctx 有 某个特定的属性而产生冲突 如： ctx.fn 所以采用时间戳避免属性名重复
@@ -211,7 +211,7 @@ Function.prototype.mycall = function(ctx, ...args) {
 
 /**
  * apply 思想一致，只是接收参数为数组
-*/
+ */
 
 Function.prototype.myapply = function(ctx, args = []) {
   const hash = Date.now()
@@ -233,7 +233,7 @@ Function.prototype.myapply = function(ctx, args = []) {
  * 
  * 如需要考虑 关键字 new 轻参照 MDN上面实现
  * 
-*/
+ */
 
 Function.prototype.mybind = function(ctx, ...args1) {
   const _this = this
@@ -296,4 +296,131 @@ const _add = currying(add)
 
 console.log(_add(1)(2)(3)) 
 // 6
+```
+
+## Ajax、Jsonp
+
+### Ajax
+
+To send an HTTP request, create an XMLHttpRequest object, open a URL, and send the request. After the transaction completes, the object will contain useful information such as the response body and the HTTP status of the result.
+```js
+
+/**
+ * 调用
+ * ajax({
+ *  url: '',
+ *  data: {
+ *    a: 1,
+ *    b: 2
+ *  }
+ *  method: 'get',
+ *  cache: false,
+ *  timeout: 3000,
+ *  success: function() {},
+ *  fail: function() {}
+ * })
+ * 
+ */
+function ajax({url = '', data = {}, method = 'get', cache = false, success = null, fali = null, timeout = 3000} = {}) {
+  if (!url) return
+
+  // 创建 ajax 对象
+  const oAjax = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP')
+
+  // 是否缓存
+  if (!cache) data._ = Date.now()
+
+  // 发送数据
+  switch(method.toLowerCase()) {
+    case 'get':
+      oAjax.open('get', `${url}?${data2Url(data)}`, true)
+      oAjax.send()
+    case 'post':
+      oAjax.open('post', url)
+      oAjax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      oAjax.send(data2Url(data))
+  }
+
+  // 接受数据
+  let timer
+  oAjax.onreadystatechange = function() {
+    if (oAjax.readystate === 4) {
+      clearTimeout(timer)
+      const { status, responseText } = oAjax
+      if (status >= 200 && status < 300 || status === 304) {
+        success && success(responseText)
+      } else {
+        fail && fail(status)
+      }
+    }
+  }
+
+  timer = setTimeout(() => {
+    fail && fail('网络异常!')
+    oAjax.onreadystatechange = null
+  }, timeout)
+}
+```
+
+### Jsonp
+```js
+// utils
+
+/**
+ * 将 json 转换成 url 如 {a:1,b:2} => a=1&b=2
+ * 
+ */
+function data2Url(json = {}) {
+  return Object.keys(json).reduce((acc, cur) => {
+    acc.push(`${cur}=${json[cur]}`)
+    return acc
+  }, []).join('&')
+}
+
+/**
+ * 
+ * Jsonp 原理即动态加载 script 标签。
+ * callback 为特定标识 通过 url 传到后台去，后台需要通过 cb 来解析 获取函数 如： a=1&cb=jsonp_1552289219269
+ * callbackFn 为 自定义得回调函数，后台会解析 cb 之后 返回 如： jsonp_1552289219269({status: 0, data: {},...})
+ * 
+*/
+function jsonp({url = '', data = {}, callback = 'cb', success = null} = {}) {
+  if (!url) return
+
+  const callbackFn = `jsonp_${Date.now()}`
+  data[callback] = callbackFn
+
+  const oHeader = document.querySelector('header')
+  const oScript = document.createElement('script')
+
+  const src = `url?${data2Url(data)}`
+  oScript.src = src
+
+  oHeader.appendChild(oScript)
+
+  window[callbackFn] = function(res) {
+    success && success(res)
+    // GC 垃圾回收
+    oHeader.removeChild(oScript)
+    window[callbackFn] = null
+  }
+}
+
+// 以百度搜索接口来测试
+
+jsonp({
+  url: 'https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',
+  data: {
+    wd: 'a',
+    json: 1,
+    sid: '1423_21089_28607_28584_28557_28604_28605',
+    req: 2,
+    csor: 1,
+    _: Date.now()
+  },
+  callback: 'cb',
+  success: function(res) {
+    console.log(res)
+  }
+})
 ```
