@@ -80,7 +80,10 @@ function debounce(cb, delay = 300) {
 
 ## reflow、repaint
 
-> 回流、重绘 [原文链接](https://segmentfault.com/a/1190000008849210)
+> 回流、重绘
+
+[segmengfaulf](https://segmentfault.com/a/1190000008849210)
+[掘金](https://juejin.im/post/5ca0c0abe51d4553a942c17d?utm_source=gold_browser_extension)
 
 <p class="warning">
 回流一定会触发重绘，重绘不一定会回流
