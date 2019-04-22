@@ -84,3 +84,50 @@ function isObj(o) {
   return typeof o === "object" && o !== null;
 }
 ```
+
+## pub/sub
+
+> emit 时 循环执行函数，on 的时候添加函数，原理类似 promise 的 then 添加 和 resolve 执行
+
+```js
+class EventEmiter {
+  constructor() {
+    this.events = this.events || new Map();
+  }
+
+  emit(ev, ...args) {
+    const handlers = this.events.get(ev);
+    handlers &&
+      handlers.forEach(hanlder => {
+        handler.apply(this, args);
+      });
+  }
+
+  on(ev, fn) {
+    const handlers = this.events.get(ev);
+    this.events.set(ev, handlers ? handlers.concat(fn) : [fn]);
+  }
+
+  remove(ev, fn) {
+    const handlers = this.events.get(ev);
+    const i = handlers.findIndex(fn);
+    handlers.splice(i, 1);
+    this.events.set(ev, handlers);
+  }
+}
+
+// test
+function a(v) {
+  console.log(v);
+}
+
+const event = new EventEmiter();
+
+event.on("click", a);
+event.on("click", function(v) {
+  console.log(v);
+});
+
+event.emit("click", 2);
+event.remove("click", a);
+```
