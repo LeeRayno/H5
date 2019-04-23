@@ -504,6 +504,24 @@ jsonp({
 1. 目前，所有浏览器都支持该功能(IE8+：IE8/9 需要使用 XDomainRequest 对象来支持 CORS）)，CORS 也已经成为主流的跨域解决方案。
 2. 整个 CORS 通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS 通信与同源的 AJAX 通信没有差别，代码完全一样。浏览器一旦发现 AJAX 请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。
 3. CORS 与 JSONP 的使用目的相同，但是比 JSONP 更强大。JSONP 只支持 GET 请求，CORS 支持所有类型的 HTTP 请求。JSONP 的优势在于支持老式浏览器，以及可以向不支持 CORS 的网站请求数据。
+4. 浏览器默认是不允许跨域可发送 `cookie` 到服务端的，通过`CORS`可以
+
+```js
+// 客户端代码
+const xhr = new XMLHttpRequest() // create
+xhr.open('GET', 'http://localhost:3001/cors') // open
+xhr.withCredentials = true // 客户端必须设置允许发送cookie
+xhr.send() // send
+
+// 服务端代码
+const express = require('express')
+const app = express()
+app.get('/cors', (req, res) => {
+  res.set('Access-control-Allow-Credentials', true) // 设置为true 接收 cookie
+  res.set('Access-control-Allow-Origin', 'http://localhost:3000') // 不能设置为 * 必须指定某一个源
+})
+app.listen(3001, () => console.log('app listing 3001'))
+```
 
 #### NGNIX
 
