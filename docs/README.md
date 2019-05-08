@@ -508,19 +508,19 @@ jsonp({
 
 ```js
 // 客户端代码
-const xhr = new XMLHttpRequest() // create
-xhr.open('GET', 'http://localhost:3001/cors') // open
-xhr.withCredentials = true // 客户端必须设置允许发送cookie
-xhr.send() // send
+const xhr = new XMLHttpRequest(); // create
+xhr.open("GET", "http://localhost:3001/cors"); // open
+xhr.withCredentials = true; // 客户端必须设置允许发送cookie
+xhr.send(); // send
 
 // 服务端代码
-const express = require('express')
-const app = express()
-app.get('/cors', (req, res) => {
-  res.set('Access-control-Allow-Credentials', true) // 设置为true 接收 cookie
-  res.set('Access-control-Allow-Origin', 'http://localhost:3000') // 不能设置为 * 必须指定某一个源
-})
-app.listen(3001, () => console.log('app listing 3001'))
+const express = require("express");
+const app = express();
+app.get("/cors", (req, res) => {
+  res.set("Access-control-Allow-Credentials", true); // 设置为true 接收 cookie
+  res.set("Access-control-Allow-Origin", "http://localhost:3000"); // 不能设置为 * 必须指定某一个源
+});
+app.listen(3001, () => console.log("app listing 3001"));
 ```
 
 #### NGNIX
