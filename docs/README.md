@@ -8,16 +8,45 @@
 
 [JavaScript 闭包的底层运行机制](http://blog.leapoahead.com/2015/09/15/js-closure/)
 
-> `当函数可以记住并访问所在的词法作用域，即使函数是在当前词法作用域之外执行，这时就产生了闭包` > `即函数在调用时可以访问他在定义时的词法作用域`
+> 当函数可以 **记住** 并 **访问** 所在的词法作用域，即使函数是在当前词法作用域之外执行，这时就产生了闭包  
+> 即函数在 **调用** 时可以访问他在 **定义** 时的词法作用域
 
 常见的如 函数作为返回值，函数作为参数传递
 
 ```js
-// 返回函数
+// demo1
+var a = 1
+function foo() {
+  var a = 2
+  console.log(a) // 2
+  bar() // 1 在这里调用访问的是他定义的时候的词法作用域
+}
+
+function bar() { // 在这里定义
+  console.log(a)
+}
+
+foo()
+
+// demo2
+var a = 1
+function foo() {
+  a = 2 // 这里改变了全局的 a ⚠️⚠️⚠️⚠️⚠️
+  console.log(a) // 2
+  bar() // 2 在这里调用访问的是他定义的时候的词法作用域
+}
+
+function bar() { // 在这里定义
+  console.log(a)
+}
+
+foo()
+
+// demo3 返回函数
 function foo() {
   var a = 2;
 
-  function bar() {
+  function bar() { // 在这里定义
     console.log(a);
   }
 
@@ -25,9 +54,9 @@ function foo() {
 }
 
 var baz = foo();
-baz(); // 2
+baz(); // 2 在这里调用
 
-// 回调函数
+// demo4 回调函数
 function debounce(cb, delay = 300) {
   let timer;
 
