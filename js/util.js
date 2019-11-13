@@ -1,8 +1,8 @@
 /*
  * @Author: LeeRay
  * @Date: 2018-03-03 13:12:59
- * @Last Modified by: LeeRay
- * @Last Modified time: 2019-02-20 14:22:26
+ * @Last Modified by: lilei
+ * @Last Modified time: 2019-11-13 16:32:45
  */
 
 // 常用工具函数整理
@@ -40,13 +40,79 @@ export const toDub = n => {
 }
 
 /**
+ * @desc 是否是undefined
+ * @param {*} v
+ * @returns {Boolean}
+ */
+export const isUndef = (v) => {
+	return v === undefined || v === null
+}
+
+/**
+ * @desc 是否是对象
+ * @param {*} v
+ * @returns {Boolean}
+ */
+export const isObject = (v) => {
+	return v !== null && typeof v === 'object'
+}
+
+export const _toString = Object.prototype.toString
+
+/**
+ * @desc 是否是普通对象
+ * @param {*} obj
+ * @returns {Boolean}
+ */
+export const isPlainObject = (obj) => {
+	return _toString.call(obj) === '[object Object]'
+}
+
+/**
+ * @desc 是否是正则表达式
+ * @param {*} v
+ * @returns {Boolean}
+ */
+export const isRegExp = (v) => {
+	return _toString.call(v) === '[object RegExp]'
+}
+
+/**
  * @desc 金钱格式化
  * @param {Number} n
  * @returns {String}
  */
-export const formatCash = n => {
+export const cashFmt = n => {
 	return n.toLocaleString()
 }
+
+/**
+ * @desc 日期格式化
+ * @param {String|Number} ts
+ * @param {String} fmt
+ * @returns {String}
+ */
+export const tsFmt = (ts = Date.now(), fmt = 'YYYY-MM-DD HH:mm:ss') => {
+	const oD = new Date(ts)
+
+	const YY = oD.getFullYear()
+	const MM = oD.getMonth()
+	const DD = oD.getDate()
+	const HH = oD.getHours()
+	const mm = oD.getMinutes()
+	const ss = oD.getSeconds()
+	const ms = oD.getMilliseconds()
+
+	return fmt
+		.replace('YYYY', YY)
+		.replace('MM', MM)
+		.replace('DD', DD)
+		.replace('HH', HH)
+		.replace('mm', mm)
+		.replace('ss', ss)
+		.replace('ms', ms)
+}
+
 
 /**
  * @desc 获取样式
