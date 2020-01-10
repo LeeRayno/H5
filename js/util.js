@@ -2,7 +2,7 @@
  * @Author: LeeRay
  * @Date: 2018-03-03 13:12:59
  * @Last Modified by: lilei
- * @Last Modified time: 2019-11-13 16:32:45
+ * @Last Modified time: 2020-01-10 17:20:19
  */
 
 // 常用工具函数整理
@@ -35,8 +35,8 @@ export const rnd = (min, max) => {
  * @returns {String}
  */
 export const toDub = n => {
-	return ('0' + n).slice(-2)
-	// return n < 10 ? '0' + n : '' + n
+	// return ('0' + n).slice(-2)
+	return n < 10 ? '0' + n : '' + n
 }
 
 /**
@@ -96,7 +96,7 @@ export const tsFmt = (ts = Date.now(), fmt = 'YYYY-MM-DD HH:mm:ss') => {
 	const oD = new Date(ts)
 
 	const YY = oD.getFullYear()
-	const MM = oD.getMonth()
+	const MM = oD.getMonth() + 1
 	const DD = oD.getDate()
 	const HH = oD.getHours()
 	const mm = oD.getMinutes()
@@ -105,12 +105,12 @@ export const tsFmt = (ts = Date.now(), fmt = 'YYYY-MM-DD HH:mm:ss') => {
 
 	return fmt
 		.replace('YYYY', YY)
-		.replace('MM', MM)
-		.replace('DD', DD)
-		.replace('HH', HH)
-		.replace('mm', mm)
-		.replace('ss', ss)
-		.replace('ms', ms)
+		.replace('MM', toDub(MM))
+		.replace('DD', toDub(DD))
+		.replace('HH', toDub(HH))
+		.replace('mm', toDub(mm))
+		.replace('ss', toDub(ss))
+		.replace('ms', toDub(ms))
 }
 
 
