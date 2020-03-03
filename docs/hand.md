@@ -131,3 +131,44 @@ event.on("click", function(v) {
 event.emit("click", 2);
 event.remove("click", a);
 ```
+
+## 大数相加
+
+> 非常大的数字相加，转为字符串形式相加
+
+```js
+function bigNumberSum(a, b) {
+  a = a + '';
+  b = b + '';
+
+  const diff = Math.abs(a.length - b.length);
+  const prefix = '0'.repeat(diff);
+
+  a.length > b.length ? (b = prefix + b) : (a = prefix + a);
+
+  // console.log(a);
+  // console.log(b);
+
+  let carry = 0; // 进位
+  let res = '';
+
+  for (let i = a.length - 1; i >= 0; i--) {
+    const sum = Number(a[i]) + Number(b[i]) + carry;
+
+    carry = sum > 9 ? 1 : 0;
+
+    res = sum + res;
+
+    if (carry === 1) {
+      res = res.slice(1);
+    }
+  }
+
+  // console.log(res);
+  return res;
+}
+
+// test
+bigNumberSum(5353451235559999, 9999);
+// 5353451235569998
+```
