@@ -81,6 +81,41 @@ function debounce(cb, delay = 300) {
 
 > 对象在查找某一个属性时，先找自己，没有找到再依次往上面找，就形成了原型链
 
+记住：实例的链式原型(`__proto__`)永远指向该实例的构造函数的原型(`prototype`)
+
+即：`instance.__proto__ === Constructor.prototype`
+
+记住：所有构造函数都是`Function`的实例,包括`Function`自己，所有的原型对象的`prototype`都是`Object`的实例除了`Object`自身
+
+```js
+// demo 理解
+// 1. Function 是 Function 的实例, 所以实例的 __proto__ 指向构造的 prototype
+Function.__proto__ === Function.prototype
+
+// 2. 所有的 原型对象的 prototype 都是 Object 的实例，除了 Object 自己
+
+// Function.prototype 是 Object 的实例，实例的 __proto__ 永远指向 构造的 prototype
+Function.prototype.__proto__ === Object.prototype
+
+// 除了 Object 自己
+Object.prototype.__proto__ === null
+
+// Object 也是构造函数,所以 Object 是 Function 的实例
+Object.__proto__ === Function.prototype
+
+
+```
+
+```js
+Object.prototype.__proto__ === null
+Object.__proto__ === Function.prototype
+Function.prototype.__proto__ === Object.prototype
+Function.__proto__ === Function.prototype
+
+```
+
+![原型链](https://tva1.sinaimg.cn/large/007S8ZIlly1gg6t1tgsc9j30n00rsavw.jpg)
+
 ## GET & POST
 
 > GET 和 POST 的区别 [原文链接](https://sunshinevvv.coding.me/blog/2017/02/09/HttpGETv.s.POST/)
@@ -609,3 +644,98 @@ postMessage 方法的第一个参数是具体的信息内容，第二个参数�
 #### window.name + iframe
 
 浏览器窗口有 window.name 属性。这个属性的最大特点是，无论是否同源，只要在同一个窗口里，前一个网页设置了这个属性，后一个网页可以读取它。并且可以支持非常长的 name 值（2MB）。
+
+## XSS & CSRF
+
+### XSS
+
+[原文](https://github.com/dwqs/blog/issues/68)
+> XSS，即 Cross Site Script，中译是跨站脚本攻击；其原本缩写是 CSS，但为了和层叠样式表(Cascading Style Sheet)有所区分，因而在安全领域叫做 XSS。  
+> XSS 攻击是指攻击者在网站上注入恶意的客户端代码，通过恶意脚本对客户端网页进行篡改，从而在用户浏览网页时，对用户浏览器进行控制或者获取用户隐私数据的一种攻击方式。
+
+XSS攻击可以分为3类：反射型（非持久型）、存储型（持久型）、基于DOM。
+
+- **反射型** XSS 只是简单地把用户输入的数据 “反射” 给浏览器
+- **存储型** XSS 会把用户输入的数据 "存储" 在服务器端，当浏览器请求数据时，脚本从服务器上传回并执行
+- **基于 DOM** 的 XSS 攻击是指通过恶意脚本修改页面的 DOM 结构，是纯粹发生在客户端的攻击
+
+### CSRF
+
+>CSRF，即 Cross Site Request Forgery，中译是跨站请求伪造，是一种劫持受信任用户向服务器发送非预期请求的攻击方式。
+
+### 防御
+
+1. 防御XSS攻击
+   1. HttpOnly 防止窃取 cookie
+   2. 用户的检查输入(白名单)
+   3. 服务端的输出检查
+2. 防御CSRF攻击
+   1. 验证码
+   2. Reffer Check
+   3. Token 验证
+
+## for...in  &  for...of
+
+### for...in
+
+> for...in 一般 循环某个对象的**可枚举**属性包括**原型链**上面的属性, 并且循环的是`key`
+
+```js
+function Parent(name) {
+  this.name = name
+}
+
+Parent.prototype.say = function() {
+  console.log(this.name)
+}
+
+function Child(name, age) {
+  Parent.call(this, name) // 属性继承
+
+  this.age = age
+}
+
+Child.prototype = Object.create(Parent.prototype) // 方法继承
+Child.prototype.constructor = Child
+
+const p = new Parent('p')
+
+for (const name in p) {
+  console.log(name)
+}
+// logs: name, say
+
+const c = new Child('c')
+
+for (const name in c) {
+  console.log(name)
+}
+// logs: name, age, say, constructor
+
+for (const name in c) {
+  if (c.hasOwnProperty(name)) {
+    console.log(name)
+  }
+}
+
+// logs: name, age  相当于Object.keys(c)
+```
+
+### for...of
+
+> 一般循环有**可迭代对象**(Symbol.iterator)的数据, eg: Array, Map, Set...,并且循环的是`value`
+
+```js
+
+const arr = [1,2,3]
+
+for(const v of arr) {
+  console.log(v)
+}
+// logs: 1,2,3
+
+for (const k in arr) {
+  console.log(k)
+}
+// logs: 0,1,2
+```
