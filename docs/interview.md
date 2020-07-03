@@ -35,6 +35,8 @@ const ret = getMaxTagName(html)
 
 ## 渲染100000条大数据
 
+[原文](https://juejin.im/post/5d76f469f265da039a28aff7#heading-6)
+
 > 1. 一次性渲染这么多数据页面肯定会卡死, 所以我们可以进行分段渲染
 > 2. 利用 document.createDocumentFragment 文档碎片将每次的渲染的节点存入内存中
 > 3. 利用 requestAnimationFrame 进行分段渲染
@@ -123,3 +125,19 @@ for(var i=0; i<5; i++) {
 }
 // 每隔一秒输出一个数，依次 0 - 4
 ```
+
+## Vue vs React
+
+[原文](https://www.zhihu.com/question/301860721/answer/724759264)
+
+1. 代码风格
+   1. Vue template, 内置 v-for 等指令
+   2. React jsx, 循环用 map 等
+2. Vue 和 React 在理念上的差别(核心)
+   1. Vue 对数据做劫持/代理，对数据更加敏感，精确。知道什么时候进行刷新
+   2. React 推崇函数式，直接进行局部刷新，重新渲染，更加粗暴，简单，react不知道什么时候进行刷新，需要开发者手动调用 setState 告知 React 进行刷新
+3. 事件系统
+   1. React 对所有事件都进行了代理，全都代理到document上，暴露给开发者的不是原生事件，而是合成事件。
+   2. Vue 事件处理函数this默认指向组件实例，React 需要bind.
+   3. React的设计是改变开发者，你按照我的来，Vue 的设计是适应开发者，你怎么爽就怎么来
+4. 预编译优化问题
