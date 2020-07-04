@@ -31,6 +31,17 @@ function getMaxTagName(node) {
 const = html = document.querySelectorAll('html') // 一定要用 All
 const ret = getMaxTagName(html)
 // {HTML: 1, HEAD: 1, STYLE: 1, SCRIPT: 2, BODY: 1, DIV: 3}
+
+let name = ''
+let max = 0
+for(let key in ret) {
+  if (ret[key] > max) {
+    max = ret[key]
+    name = key
+  }
+}
+
+console.log(`出现最多的标签是${name}, 出现的次数是${max}`)
 ```
 
 ## 渲染100000条大数据
