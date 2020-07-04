@@ -137,6 +137,35 @@ for(var i=0; i<5; i++) {
 // 每隔一秒输出一个数，依次 0 - 4
 ```
 
+## 数组乱序
+
+[原文](https://www.zhihu.com/question/68330851)
+
+```js
+// 1. 洗牌算法
+Array.prototype.shuffle = function() {
+  const arr = this;
+  for(let i=arr.length-1; i>=0; i--) {
+    const rmd = Math.floor(Math.random()*(i+1)); // 一定要用;不然无法解析
+    [arr[i], arr[rmd]] = [arr[rmd], arr[i]];
+  }
+
+  return arr
+}
+
+const arr = [1,2,3,4,5,6]
+console.log(arr.shuffle())
+console.log(arr.shuffle())
+console.log(arr.shuffle())
+
+// 2. 不准确
+arr.sort((a,b) => {
+  return Math.random() > 0.5
+})
+
+
+```
+
 ## Vue vs React
 
 [原文](https://www.zhihu.com/question/301860721/answer/724759264)
