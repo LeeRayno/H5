@@ -138,9 +138,20 @@ Function.__proto__ === Function.prototype
 
 - 雅虎军规
 - 缓存
-- 懒加载
+- 图片懒加载
 - 组件路由级别的代码分割
-- 防抖(debounce)、节流(throttle)
+- transfrom -> top/left （提升合成层）
+- will-change: scroll-position // 表示开发者希望在不久后改变滚动条的位置或者使之产生动画。
+- webpack 打包优化(减少文件搜索范围,Dll动态链接库，commchunksplugin)
+- 防抖(debounce) 适用场景
+  - 每次 resize/scroll 触发统计事件
+  - input 搜索输入框，输入完成才去发送搜索请求，减小服务器压力
+- 节流(throttle)适用场景
+  - DOM 元素的拖拽功能实现（mousemove）
+  - 射击游戏的 mousedown/keydown 事件（单位时间只能发射一颗子弹）
+  - 计算鼠标移动的距离（mousemove）
+  - Canvas 模拟画板功能（mousemove）
+  - 监听滚动事件判断是否到页面底部自动加载更多：给 scroll 加了 debounce 后，只有用户停止滚动后，才会判断是否到了页面底部；如果是 throttle 的话，只要页面滚动就会间隔一段时间判断一次
 
 ## reflow、repaint
 
