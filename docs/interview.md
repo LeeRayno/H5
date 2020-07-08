@@ -166,6 +166,30 @@ arr.sort((a,b) => {
 
 ```
 
+## 输出季度范围
+
+```js
+// 输出 getQuaterRange('2018Q1', '2020Q2') 之前的所有季度
+
+function getQuaterRange(start, end) {
+  const [startY, startQ] = start.split('Q').map(Number)
+  const [endY, endQ] = end.split('Q').map(Number)
+
+  let res = []
+  for(let i=startY; i<=endY; i++) {
+    for(let j=1; j<=4; j++) {
+      if(!((i===startY && j<startQ) || (i===endY && j>endQ))) {
+        res.push(`${i}Q${j}`)
+      }
+    }
+  }
+
+  return res
+}
+
+console.log(getQuaterRange('2018Q2', '2020Q3'))
+```
+
 ## Vue vs React
 
 [原文](https://www.zhihu.com/question/301860721/answer/724759264)
