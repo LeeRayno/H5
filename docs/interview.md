@@ -190,6 +190,19 @@ function getQuaterRange(start, end) {
 console.log(getQuaterRange('2018Q2', '2020Q3'))
 ```
 
+## 数组铺平
+
+```js
+// 普通的铺平
+const deepFlatten = (arr = []) => [].concat(...arr.map(v => Array.isArray(v) ? deepFlatten(v) : v))
+
+// 如果需要指定铺平到几层
+const deepFlatten = (arr = [], deepth = 1) => [].concat(...arr.map(v => Array.isArray(v) && deepth > 1 ? deepFlatten(v, deepth-1) : v))
+
+const a = [[1,2, [10, 20, [0]]],[3,4],[5,[6,7,[9]]], 12,1222]
+console.log(deepFlatten(a,2))
+```
+
 ## Vue vs React
 
 [原文](https://www.zhihu.com/question/301860721/answer/724759264)
