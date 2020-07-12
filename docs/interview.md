@@ -203,6 +203,49 @@ const a = [[1,2, [10, 20, [0]]],[3,4],[5,[6,7,[9]]], 12,1222]
 console.log(deepFlatten(a,2))
 ```
 
+## key 转换成下划线
+
+```js
+// 是否是对象
+function isObj(obj) {
+  return typeof obj === 'object' && obj !== null
+}
+
+// aBC  转换成 下划线 a_b_c
+function snacklize(str) {
+  return str.replace(/([A-Z])/g, (_, c) => `_${c.toLowerCase()}`)
+}
+
+function transform(data = {}, depth = 1) {
+  let res = {}
+
+  for(let key in data) {
+    if(data.hasOwnProperty(key)) {
+      const snackKey = snacklize(key)
+      const cur = data[key]
+      res[snackKey] = isObj(cur) && depth > 1 ? transform(cur, depth - 1) : cur
+    }
+  }
+
+  return res
+}
+
+const res = {
+  aBC: "123",
+  cc: "asdf",
+  cBA: {
+    abBc: "asd",
+    sDF: "asdf",
+    ASD: {
+      asd: 'asdf',
+      SDFSDF: 'adf'
+    }
+  }
+};
+
+console.log(transform(res, 2));
+```
+
 ## Vue vs React
 
 [原文](https://www.zhihu.com/question/301860721/answer/724759264)
