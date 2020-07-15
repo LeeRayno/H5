@@ -750,3 +750,9 @@ for (const k in arr) {
 }
 // logs: 0,1,2
 ```
+
+### tree-shaking
+
+- ES6 模块依赖关系是确定的，和运行时的状态无关，可以进行可靠的静态分析，这就是 tree-shaking 的基础
+- ES6 是在预编译阶段去加载模块的，而 CommonJS 是在运行阶段去加载模块的
+- ES6 模块输出的是值的引用，CommonJS 模块输出的是值的拷贝。
