@@ -751,8 +751,76 @@ for (const k in arr) {
 // logs: 0,1,2
 ```
 
-### tree-shaking
+## tree-shaking
 
 - ES6 模块依赖关系是确定的，和运行时的状态无关，可以进行可靠的静态分析，这就是 tree-shaking 的基础
 - ES6 是在预编译阶段去加载模块的，而 CommonJS 是在运行阶段去加载模块的
 - ES6 模块输出的是值的引用，CommonJS 模块输出的是值的拷贝。
+
+## Performance
+
+> 前端性能监控
+
+```js
+// @see https://www.jianshu.com/p/b25c5b88baf5
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    // console.table(window.performance.getEntriesByType('navigation')[0])
+    // console.table(window.performance.timing)
+    // timing
+    const t = window.performance.getEntriesByType('navigation')[0] || window.performance.timing
+    // console.log(t)
+    const navigationStart = 0
+
+    const times = [
+      {
+        key: 'Redirect',
+        desc: '网页重定向的耗时',
+        value: t.redirectEnd - t.redirectStart
+      },
+      {
+        key: 'AppCache',
+        desc: '检查本地缓存的耗时',
+        value: t.domainLookupStart - t.fetchStart
+      },
+      {
+        key: 'DNS',
+        desc: 'DNS查询的耗时',
+        value: t.domainLookupEnd - t.domainLookupStart
+      },
+      {
+        key: 'TCP',
+        desc: 'TCP连接的耗时',
+        value: t.connectEnd - t.connectStart
+      },
+      {
+        key: 'Waiting(TTFB)',
+        desc: '从客户端发起请求到接收到响应的时间 / Time To First Byte',
+        value: t.responseStart - t.requestStart
+      },
+      {
+        key: 'Content Download',
+        desc: '下载服务端返回数据的时间',
+        value: t.responseEnd - t.responseStart
+      },
+      {
+        key: 'HTTP Total Time',
+        desc: 'http请求总耗时',
+        value: t.responseEnd - t.requestStart
+      },
+      {
+        key: 'DOMContentLoaded',
+        desc: 'DOM加载完成的时间',
+        value: t.domContentLoadedEventEnd - navigationStart
+      },
+      {
+        key: 'Loaded',
+        desc: '页面load的总耗时',
+        value: t.loadEventEnd - navigationStart
+      }
+    ]
+
+    console.table(times)
+  }, 0)
+})
+```
