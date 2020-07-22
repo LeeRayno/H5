@@ -763,6 +763,7 @@ for (const k in arr) {
 
 ```js
 // @see https://www.jianshu.com/p/b25c5b88baf5
+// @see https://www.open-open.com/lib/view/open1414631044559.html
 window.addEventListener('load', () => {
   setTimeout(() => {
     // console.table(window.performance.getEntriesByType('navigation')[0])
