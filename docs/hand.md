@@ -141,10 +141,13 @@ function bigNumberSum(a, b) {
   a = a + '';
   b = b + '';
 
-  const diff = Math.abs(a.length - b.length);
-  const prefix = '0'.repeat(diff);
+  // const diff = Math.abs(a.length - b.length);
+  // const prefix = '0'.repeat(diff);
 
-  a.length > b.length ? (b = prefix + b) : (a = prefix + a);
+  // a.length > b.length ? (b = prefix + b) : (a = prefix + a);
+  const length = Math.max(a.length, b.length);
+  a = a.padStart(length, '0');
+  b = b.padStart(length, '0');
 
   // console.log(a);
   // console.log(b);

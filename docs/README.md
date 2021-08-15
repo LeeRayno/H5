@@ -15,38 +15,41 @@
 
 ```js
 // demo1
-var a = 1
+var a = 1;
 function foo() {
-  var a = 2
-  console.log(a) // 2
-  bar() // 1 在这里调用访问的是他定义的时候的词法作用域
+  var a = 2;
+  console.log(a); // 2
+  bar(); // 1 在这里调用访问的是他定义的时候的词法作用域
 }
 
-function bar() { // 在这里定义
-  console.log(a)
+function bar() {
+  // 在这里定义
+  console.log(a);
 }
 
-foo()
+foo();
 
 // demo2
-var a = 1
+var a = 1;
 function foo() {
-  a = 2 // 这里改变了全局的 a ⚠️⚠️⚠️⚠️⚠️
-  console.log(a) // 2
-  bar() // 2 在这里调用访问的是他定义的时候的词法作用域
+  a = 2; // 这里改变了全局的 a ⚠️⚠️⚠️⚠️⚠️
+  console.log(a); // 2
+  bar(); // 2 在这里调用访问的是他定义的时候的词法作用域
 }
 
-function bar() { // 在这里定义
-  console.log(a)
+function bar() {
+  // 在这里定义
+  console.log(a);
 }
 
-foo()
+foo();
 
 // demo3 返回函数
 function foo() {
   var a = 2;
 
-  function bar() { // 在这里定义
+  function bar() {
+    // 在这里定义
     console.log(a);
   }
 
@@ -60,13 +63,44 @@ baz(); // 2 在这里调用
 function debounce(cb, delay = 300) {
   let timer;
 
-  return function(...args) {
+  return function (...args) {
     clearTimeout(timer);
     timer = setTimeout(() => {
       cb && cb.apply(this, args);
     }, delay);
   };
 }
+```
+
+```js
+// 说出打印顺序
+// https://mp.weixin.qq.com/s/UEsTQjoSbOFh3nv7_TePfg
+function Foo() {
+  getName = function () {
+    alert(1);
+  };
+  return this;
+}
+Foo.getName = function () {
+  alert(2);
+};
+Foo.prototype.getName = function () {
+  alert(3);
+};
+var getName = function () {
+  alert(4);
+};
+function getName() {
+  alert(5);
+}
+
+// 请写出以下输出结果：
+Foo.getName();
+getName();
+Foo().getName();
+getName();
+new Foo.getName();
+new Foo().getName();
 ```
 
 ### 如何释放闭包
@@ -90,28 +124,25 @@ function debounce(cb, delay = 300) {
 ```js
 // demo 理解
 // 1. Function 是 Function 的实例, 所以实例的 __proto__ 指向构造的 prototype
-Function.__proto__ === Function.prototype
+Function.__proto__ === Function.prototype;
 
 // 2. 所有的 原型对象的 prototype 都是 Object 的实例，除了 Object 自己
 
 // Function.prototype 是 Object 的实例，实例的 __proto__ 永远指向 构造的 prototype
-Function.prototype.__proto__ === Object.prototype
+Function.prototype.__proto__ === Object.prototype;
 
 // 除了 Object 自己
-Object.prototype.__proto__ === null
+Object.prototype.__proto__ === null;
 
 // Object 也是构造函数,所以 Object 是 Function 的实例
-Object.__proto__ === Function.prototype
-
-
+Object.__proto__ === Function.prototype;
 ```
 
 ```js
-Object.prototype.__proto__ === null
-Object.__proto__ === Function.prototype
-Function.prototype.__proto__ === Object.prototype
-Function.__proto__ === Function.prototype
-
+Object.prototype.__proto__ === null;
+Object.__proto__ === Function.prototype;
+Function.prototype.__proto__ === Object.prototype;
+Function.__proto__ === Function.prototype;
 ```
 
 ![原型链](https://tva1.sinaimg.cn/large/007S8ZIlly1gg6t1tgsc9j30n00rsavw.jpg)
@@ -142,7 +173,7 @@ Function.__proto__ === Function.prototype
 - 组件路由级别的代码分割
 - transfrom -> top/left （提升合成层）
 - will-change: scroll-position // 表示开发者希望在不久后改变滚动条的位置或者使之产生动画。
-- webpack 打包优化(减少文件搜索范围,Dll动态链接库，commchunksplugin)
+- webpack 打包优化(减少文件搜索范围,Dll 动态链接库，commchunksplugin)
 - 防抖(debounce) 适用场景
   - 每次 resize/scroll 触发统计事件
   - input 搜索输入框，输入完成才去发送搜索请求，减小服务器压力
@@ -247,7 +278,7 @@ class PromiseSimple {
   resolve(v) {
     try {
       let storeValue = v;
-      this.promiseChainFns.forEach(fn => {
+      this.promiseChainFns.forEach((fn) => {
         storeValue = fn(storeValue);
       });
     } catch (error) {
@@ -259,6 +290,85 @@ class PromiseSimple {
 
   reject(error) {
     this.handleError(error);
+  }
+}
+
+// Promise.all 实现
+// Promise.all([p1, p2]).then((res) => console.log(res))
+Promise.all = function (promises) {
+  let res = [];
+  return new Promise((resolve, reject) => {
+    promises.forEach((p, i) => {
+      // 兼容不是 promise 的情况
+      Promise.resolve(p)
+        .then((r) => {
+          res[i] = r; // 用下标保证顺序
+          if (res.length === promises.length) {
+            resolve(res); // 等到所有执行完了在resolve
+          }
+        })
+        .catch((e) => reject(e));
+    });
+  });
+};
+
+// Promise.race([p1, p2]).then(res => console.log(res))
+Promise.race = function (promises) {
+  return new Promise((resolve, reject) => {
+    promise.forEach((p) => {
+      Promise.resolve(p)
+        .then((r) => {
+          resolve(p); // promise 状态是不可逆的，一旦 resolve，其他的在 resolve 就没用了
+        })
+        .catch((e) => reject(e));
+    });
+  });
+};
+
+// 延迟函数
+const sleep = (res, wait = 300) =>
+  new Promise((resolve, reject) => setTimeout(resolve, wait, res));
+
+// 测试
+Promise.race([sleep(1), sleep(2, 500)]);
+```
+
+## debounce、throttle
+
+防抖和节流，防抖就像压弹簧，你一直压着他就不会执行，节流就像拧紧水龙头让他一滴一滴的滴
+
+```js
+// debounce
+function debounce(cb, delay = 300) {
+  let timer;
+  return function (...args) {
+    timer && clearTimeout(timer);
+    timer = setTimeout(() => {
+      cb && cb.apply(this, args);
+    }, delay);
+  };
+}
+
+// throttle 时间版
+function throttle(cb, delay = 300) {
+  let previous = Date.now();
+  return function (...args) {
+    const now = Date.now();
+    if (now - previous >= delay) {
+      cb && cb.apply(this, args);
+      previous = now;
+    }
+  };
+}
+
+// throttle 定时器版, timer 相当于做了个开关
+function throttle(cb, delay = 300) {
+  let timer;
+  return function (...args) {
+    !timer && timer = setTimeout(() => {
+      cb && cb.apply(this, args);
+      timer = null;
+    }, delay)
   }
 }
 ```
@@ -279,7 +389,7 @@ class PromiseSimple {
  *
  */
 
-Function.prototype.mycall = function(ctx, ...args) {
+Function.prototype.mycall = function (ctx, ...args) {
   const hash = Date.now(); // 避免 ctx 有 某个特定的属性而产生冲突 如： ctx.fn 所以采用时间戳避免属性名重复
   ctx[hash] = this; // 即给 ctx 加个 方法 这个方法就是 fn 实例
 
@@ -294,7 +404,7 @@ Function.prototype.mycall = function(ctx, ...args) {
  * apply 思想一致，只是接收参数为数组
  */
 
-Function.prototype.myapply = function(ctx, args = []) {
+Function.prototype.myapply = function (ctx, args = []) {
   const hash = Date.now();
 
   ctx[hash] = this;
@@ -316,10 +426,10 @@ Function.prototype.myapply = function(ctx, args = []) {
  *
  */
 
-Function.prototype.mybind = function(ctx, ...args1) {
+Function.prototype.mybind = function (ctx, ...args1) {
   const _this = this;
 
-  return function(...args2) {
+  return function (...args2) {
     // apply 可以参照上面实现
     return _this.apply(ctx, args1.concat(args2)); // 将 bind 的参数和 执行时的参数合并
   };
@@ -329,14 +439,14 @@ Function.prototype.mybind = function(ctx, ...args1) {
 
 const a = {
   name: "a",
-  fn: function() {
+  fn: function () {
     console.log(this.name);
     // console.log(arguments.length)
-  }
+  },
 };
 
 const b = {
-  name: "b"
+  name: "b",
 };
 
 a.fn.mycall(b, 1, 2);
@@ -348,6 +458,7 @@ a.fn.mybind(b, 1, 2)(3, 4);
 ## 柯里化
 
 柯里化（Currying）,维基百科上的解释是，把接受多个参数的函数转换成接受一个单一参数的函数 [参考原文](https://www.jqhtml.com/33137.html)
+
 > 核心思想就是 **判断所有参数个数是否相等** 如果`_add`接收的参数的个数大于等于传入的函数`add`的参数的个数时就执行传入的函数，否则就返回里面的函数
 
 ```js
@@ -371,12 +482,12 @@ function currying(fn, ...args) {
 const _add = currying(add);
 
 console.log(_add(1)(2)(3));
-console.log(_add(1,2)(3));
-console.log(_add(1,2,3))
+console.log(_add(1, 2)(3));
+console.log(_add(1, 2, 3));
 
-const _add2 = currying(add, 1)
-console.log(_add2(2,3))
-console.log(_add2(2)(3))
+const _add2 = currying(add, 1);
+console.log(_add2(2, 3));
+console.log(_add2(2)(3));
 // 6
 ```
 
@@ -410,7 +521,7 @@ function ajax({
   cache = false,
   success = null,
   fali = null,
-  timeout = 3000
+  timeout = 3000,
 } = {}) {
   if (!url) return;
 
@@ -438,7 +549,7 @@ function ajax({
 
   // 接受数据
   let timer;
-  oAjax.onreadystatechange = function() {
+  oAjax.onreadystatechange = function () {
     if (oAjax.readystate === 4) {
       clearTimeout(timer);
       const { status, responseText } = oAjax;
@@ -496,7 +607,7 @@ function jsonp({ url = "", data = {}, callback = "cb", success = null } = {}) {
 
   oHead.appendChild(oScript);
 
-  window[callbackFn] = function(res) {
+  window[callbackFn] = function (res) {
     success && success(res);
     // GC 垃圾回收
     oHead.removeChild(oScript);
@@ -520,7 +631,7 @@ function jsonp({ url = "", data = {}, callback = "cb" }) {
 
     oHead.appendChild(oScript);
 
-    window[callback] = function(res) {
+    window[callback] = function (res) {
       resolve(res);
 
       oHead.removeChild(oScript);
@@ -541,12 +652,12 @@ jsonp({
     sid: "1423_21089_28607_28584_28557_28604_28605",
     req: 2,
     csor: 1,
-    _: Date.now()
+    _: Date.now(),
   },
   callback: "cb",
-  success: function(res) {
+  success: function (res) {
     console.log(res);
-  }
+  },
 });
 ```
 
@@ -661,10 +772,11 @@ postMessage 方法的第一个参数是具体的信息内容，第二个参数�
 ### XSS
 
 [原文](https://github.com/dwqs/blog/issues/68)
+
 > XSS，即 Cross Site Script，中译是跨站脚本攻击；其原本缩写是 CSS，但为了和层叠样式表(Cascading Style Sheet)有所区分，因而在安全领域叫做 XSS。  
 > XSS 攻击是指攻击者在网站上注入恶意的客户端代码，通过恶意脚本对客户端网页进行篡改，从而在用户浏览网页时，对用户浏览器进行控制或者获取用户隐私数据的一种攻击方式。
 
-XSS攻击可以分为3类：反射型（非持久型）、存储型（持久型）、基于DOM。
+XSS 攻击可以分为 3 类：反射型（非持久型）、存储型（持久型）、基于 DOM。
 
 - **反射型** XSS 只是简单地把用户输入的数据 “反射” 给浏览器
 - **存储型** XSS 会把用户输入的数据 "存储" 在服务器端，当浏览器请求数据时，脚本从服务器上传回并执行
@@ -672,20 +784,20 @@ XSS攻击可以分为3类：反射型（非持久型）、存储型（持久型�
 
 ### CSRF
 
->CSRF，即 Cross Site Request Forgery，中译是跨站请求伪造，是一种劫持受信任用户向服务器发送非预期请求的攻击方式。
+> CSRF，即 Cross Site Request Forgery，中译是跨站请求伪造，是一种劫持受信任用户向服务器发送非预期请求的攻击方式。
 
 ### 防御
 
-1. 防御XSS攻击
+1. 防御 XSS 攻击
    1. HttpOnly 防止窃取 cookie
    2. 用户的检查输入(白名单)
    3. 服务端的输出检查
-2. 防御CSRF攻击
+2. 防御 CSRF 攻击
    1. 验证码
    2. Reffer Check
    3. Token 验证
 
-## for...in  &  for...of
+## for...in & for...of
 
 ### for...in
 
@@ -693,39 +805,39 @@ XSS攻击可以分为3类：反射型（非持久型）、存储型（持久型�
 
 ```js
 function Parent(name) {
-  this.name = name
+  this.name = name;
 }
 
-Parent.prototype.say = function() {
-  console.log(this.name)
-}
+Parent.prototype.say = function () {
+  console.log(this.name);
+};
 
 function Child(name, age) {
-  Parent.call(this, name) // 属性继承
+  Parent.call(this, name); // 属性继承
 
-  this.age = age
+  this.age = age;
 }
 
-Child.prototype = Object.create(Parent.prototype) // 方法继承
-Child.prototype.constructor = Child
+Child.prototype = Object.create(Parent.prototype); // 方法继承
+Child.prototype.constructor = Child;
 
-const p = new Parent('p')
+const p = new Parent("p");
 
 for (const name in p) {
-  console.log(name)
+  console.log(name);
 }
 // logs: name, say
 
-const c = new Child('c')
+const c = new Child("c");
 
 for (const name in c) {
-  console.log(name)
+  console.log(name);
 }
 // logs: name, age, say, constructor
 
 for (const name in c) {
   if (c.hasOwnProperty(name)) {
-    console.log(name)
+    console.log(name);
   }
 }
 
@@ -737,16 +849,15 @@ for (const name in c) {
 > 一般循环有**可迭代对象**(Symbol.iterator)的数据, eg: Array, Map, Set...,并且循环的是`value`
 
 ```js
+const arr = [1, 2, 3];
 
-const arr = [1,2,3]
-
-for(const v of arr) {
-  console.log(v)
+for (const v of arr) {
+  console.log(v);
 }
 // logs: 1,2,3
 
 for (const k in arr) {
-  console.log(k)
+  console.log(k);
 }
 // logs: 0,1,2
 ```
@@ -764,64 +875,66 @@ for (const k in arr) {
 ```js
 // @see https://www.jianshu.com/p/b25c5b88baf5
 // @see https://www.open-open.com/lib/view/open1414631044559.html
-window.addEventListener('load', () => {
+window.addEventListener("load", () => {
   setTimeout(() => {
     // console.table(window.performance.getEntriesByType('navigation')[0])
     // console.table(window.performance.timing)
     // timing
-    const t = window.performance.getEntriesByType('navigation')[0] || window.performance.timing
+    const t =
+      window.performance.getEntriesByType("navigation")[0] ||
+      window.performance.timing;
     // console.log(t)
-    const navigationStart = 0
+    const navigationStart = 0;
 
     const times = [
       {
-        key: 'Redirect',
-        desc: '网页重定向的耗时',
-        value: t.redirectEnd - t.redirectStart
+        key: "Redirect",
+        desc: "网页重定向的耗时",
+        value: t.redirectEnd - t.redirectStart,
       },
       {
-        key: 'AppCache',
-        desc: '检查本地缓存的耗时',
-        value: t.domainLookupStart - t.fetchStart
+        key: "AppCache",
+        desc: "检查本地缓存的耗时",
+        value: t.domainLookupStart - t.fetchStart,
       },
       {
-        key: 'DNS',
-        desc: 'DNS查询的耗时',
-        value: t.domainLookupEnd - t.domainLookupStart
+        key: "DNS",
+        desc: "DNS查询的耗时",
+        value: t.domainLookupEnd - t.domainLookupStart,
       },
       {
-        key: 'TCP',
-        desc: 'TCP连接的耗时',
-        value: t.connectEnd - t.connectStart
+        key: "TCP",
+        desc: "TCP连接的耗时",
+        value: t.connectEnd - t.connectStart,
       },
       {
-        key: 'Waiting(TTFB)',
-        desc: '从客户端发起请求到接收到响应的时间 / Time To First Byte',
-        value: t.responseStart - t.requestStart
+        key: "Waiting(TTFB)",
+        desc: "从客户端发起请求到接收到响应的时间 / Time To First Byte",
+        value: t.responseStart - t.requestStart,
       },
       {
-        key: 'Content Download',
-        desc: '下载服务端返回数据的时间',
-        value: t.responseEnd - t.responseStart
+        key: "Content Download",
+        desc: "下载服务端返回数据的时间",
+        value: t.responseEnd - t.responseStart,
       },
       {
-        key: 'HTTP Total Time',
-        desc: 'http请求总耗时',
-        value: t.responseEnd - t.requestStart
+        key: "HTTP Total Time",
+        desc: "http请求总耗时",
+        value: t.responseEnd - t.requestStart,
       },
       {
-        key: 'DOMContentLoaded',
-        desc: 'DOM加载完成的时间',
-        value: t.domContentLoadedEventEnd - navigationStart
+        key: "DOMContentLoaded",
+        desc: "DOM加载完成的时间",
+        value: t.domContentLoadedEventEnd - navigationStart,
       },
       {
-        key: 'Loaded',
-        desc: '页面load的总耗时',
-        value: t.loadEventEnd - navigationStart
-      }
-    ]
+        key: "Loaded",
+        desc: "页面load的总耗时",
+        value: t.loadEventEnd - navigationStart,
+      },
+    ];
 
-    console.table(times)
-  }, 0)
-})
+    console.table(times);
+  }, 0);
+});
 ```
