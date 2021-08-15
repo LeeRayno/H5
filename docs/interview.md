@@ -246,6 +246,61 @@ const res = {
 console.log(transform(res, 2));
 ```
 
+## 模板引擎
+
+```js
+// https://juejin.cn/post/6987549240436195364?utm_source=gold_browser_extension#heading-194
+const template = '嗨，{{ info.name.value }}您好，今天是星期 {{ day.value }}';
+
+const data = {
+  info: {
+    name: {
+      value: '张三'
+    }
+  },
+  day: {
+    value: '三'
+  }
+};
+
+render(template, data); // 嗨，张三您好，今天是星期三
+
+function render(template, data) {
+  // .*? 经典的非贪婪匹配，
+  // 还可以用 /{{([^}]*)}}/g 
+  // {{ 后面不是数字就不需要转义
+  return template.replace(/{{(.*?)}}/g, (_, a) => {
+    const path = a?.trim()?.split('.');
+    return getValue(data, path)
+  })
+}
+
+function getValue(data, path) {
+  try {
+    return path.reduce((acc, cur) => {
+      return acc[cur];
+    }, data);
+  } catch(e) {
+    return undefined;
+  }
+}
+
+```
+
+## 数组去重
+
+```js
+const arr = [1,2,34,3423,1,2,34,3,4,5,6,7,7,7,73,3,32,2,2,2,2,1]
+
+// 1.
+const deduplicate = (arr = []) => {
+  const map = new Map();
+  return arr.filter(it => !map.has(it) && map.set(it))
+}
+
+console.log(deduplicate(arr))
+```
+
 ## Vue vs React
 
 [原文](https://www.zhihu.com/question/301860721/answer/724759264)
