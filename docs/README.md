@@ -297,13 +297,15 @@ class PromiseSimple {
 // Promise.all([p1, p2]).then((res) => console.log(res))
 Promise.all = function (promises) {
   let res = [];
+  let count = 0;
   return new Promise((resolve, reject) => {
     promises.forEach((p, i) => {
       // 兼容不是 promise 的情况
       Promise.resolve(p)
         .then((r) => {
           res[i] = r; // 用下标保证顺序
-          if (res.length === promises.length) {
+          count ++;
+          if (count === promises.length) {
             resolve(res); // 等到所有执行完了在resolve
           }
         })
