@@ -301,6 +301,34 @@ const deduplicate = (arr = []) => {
 console.log(deduplicate(arr))
 ```
 
+## 两数之和
+
+```js
+// toSum([2, 13, 7, 8], 9) => [0, 2]
+// 1. O(n^2)
+function toSum(arr, target) {
+  for(let i=0; i<arr.length; i++) {
+    for(let j=i+1; j<arr.length; j++) {
+      if (arr[i]+arr[j]=target) {
+        return [i, j]
+      }
+    }
+  }
+}
+
+// 2. O(n)
+function toSum(arr, target) {
+  let map = new Map();
+  for(let i=0; i<arr.length; i++) {
+    if (map.has(target - arr[i])) {
+      return [map.get(target - arr[i]), i]
+    } else {
+      map.set(arr[i], i)
+    }
+  }
+}
+```
+
 ## Vue vs React
 
 [原文](https://www.zhihu.com/question/301860721/answer/724759264)
