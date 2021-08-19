@@ -203,6 +203,72 @@ const a = [[1,2, [10, 20, [0]]],[3,4],[5,[6,7,[9]]], 12,1222]
 console.log(deepFlatten(a,2))
 ```
 
+## 扁平转树
+
+```js
+// https://juejin.cn/post/6983904373508145189?utm_source=gold_browser_extension
+let arr = [
+  {id: 1, name: '部门1', pid: 0},
+  {id: 2, name: '部门2', pid: 1},
+  {id: 3, name: '部门3', pid: 1},
+  {id: 4, name: '部门4', pid: 3},
+  {id: 5, name: '部门5', pid: 4},
+]
+
+// 1.
+function flattenToTree(arr = []) {
+  let res = [];
+  for(let i=0; i<arr.length; i++) {
+    arr[i].children = arr[i].children || [];
+    if (!arr[i].pid) {
+      res.push(arr[i])
+    }
+    for(let j=i+1; j<arr.length; j++) {
+      if(arr[i].id === arr[j].pid) {
+        arr[i].children.push(arr[j])
+      }
+    }
+  }
+
+  return res;
+}
+
+// 2.
+function flattenToTree(arr = []) {
+  let res = [];
+  let map = {};
+
+  for(const item of arr) {
+    const { id, pid } = item;
+    if (!map[id]) {
+      map[id] = {
+        children: []
+      }
+    }
+    map[id] = {
+      ...item,
+      children: map[id].children || []
+    }
+
+    if (!pid) {
+      res.push(map[id])
+    } else {
+      if (!map[pid]) {
+        map[pid] = {
+          children: []
+        }
+      }
+
+      map[pid].children.push(map[id])
+    }
+  }
+
+  return res;
+}
+
+console.log(JSON.stringify(flattenToTree(arr), null, 2))
+```
+
 ## key 转换成下划线
 
 ```js
