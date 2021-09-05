@@ -203,6 +203,38 @@ const a = [[1,2, [10, 20, [0]]],[3,4],[5,[6,7,[9]]], 12,1222]
 console.log(deepFlatten(a,2))
 ```
 
+## 铺平去重排序
+
+编写一个程序将数组扁平化去并除其中重复部分数据，最终得到一个升序且不重复的数组[原文](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/8)
+
+```js
+// 已知如下数组：
+
+// var arr = [ [1, 2, 2], [3, 4, 5, 5], [6, 7, 8, 9, [11, 12, [12, 13, [14] ] ] ], 10];
+
+const duplicateFlattentSort = (arr) => {
+  return [...new Set([].concat(...arr.map(v => Array.isArray(v) ? duplicateFlattentSort(v) : v)))].sort((a, b) => a - b)
+}
+
+// 2. 希望链式调用 arr.flat().unique().sort();
+// 铺平
+Array.prototype.flat = function() {
+  return [].concat(...this.map(item => Array.isArray(item) ? item.flat() : item))
+}
+
+// 去重
+Array.prototype.unique = function() {
+  return [...new Set(this)]
+}
+
+// 排序
+Array.prototype._sort = function() {
+  this.sort((a, b) => a - b)
+}
+
+console.log(arr.flat().unique()._sort())
+```
+
 ## 扁平转树
 
 ```js

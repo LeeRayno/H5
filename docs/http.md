@@ -101,17 +101,27 @@ HTTP 缓存分为强制缓存和协商缓存
 - 500 Internal Server Error, 服务端错误
 - 503 Service Unavaliable, 表示服务器暂时处于超负载或停机维护，无法处理请求
 
-## TCP/IP 三次握手
+## TCP/IP 三次握手 & 四次挥手
 
 **目的：为了准确无误的将数据送达到目标，TCP 采用了三次握手策略。**
 
-> TCP 协议将数据包发送出去之后，TCP 不会对传送后的情况置之不理，它一定会向对方确认是否成功送达。握手过程中使用了 TCP 的标志 (flag) - SYN (synchronize) 和 ACK (acknowledgement)。
+> TCP 协议将数据包发送出去之后，TCP 不会对传送后的情况置之不理，它一定会向对方确认是否成功送达。握手过程中使用了 TCP 的标志 (flag) - SYN (synchronize) 和 ACK (acknowledgement)。[原文](https://github.com/Advanced-Frontend/Daily-Interview-Question/issues/15)
+
+![图片](https://user-images.githubusercontent.com/23043941/61610138-c873b000-ac8a-11e9-9478-5b9197cb2288.png)
+![发送能力](https://user-images.githubusercontent.com/21079721/96951415-0828e780-151f-11eb-93a3-e2e8045d456d.png)
 
 1. 发送端首先发送一个带 SYN 标志的数据包给对方。
 2. 接收端接收到数据后，回传一个带有 SYN/ACK 标志的数据包以示传达确认信息。
 3. 最后，发送端在回传一个带有 ACK 标志的数据包，代表握手结束。
 
 若在握手过程中某个阶段莫名中断，TCP 协议会再次以相同的顺序发送相同的数据包。
+
+**为什么是三次握手🤝？**
+三次握手之所以是三次，是为了保证`client`和`server`均让对方知道自己的发送和接收能力没问题二保证的最小次数
+
+1. 第一次：`client` => `server` 只能`server`判断出 `client`具有发送能力
+2. 第二次 `server` => `client` 就可以判断出`server`具有接收和发送的能力，此时`client`还需要告知`server`自己的接收能力没问题，于是就有了第三次
+3. `client` => `server` 告知`server`自己接收能力没问题，双方均保证了自己的接收和发送能力没有问题
 
 ## 七层协议
 
@@ -129,7 +139,9 @@ HTTP 缓存分为强制缓存和协商缓存
 
 ### HTTP1.x 有哪些问题、缺陷
 
-[原文](https://juejin.im/post/5c0ce870f265da61171c8c66) [原文](https://github.com/ljianshu/Blog/issues/57)
+[原文](https://juejin.im/post/5c0ce870f265da61171c8c66)
+[原文](https://github.com/ljianshu/Blog/issues/57)
+[HTTP/2 相比 1.0 有哪些重大改进？](https://www.zhihu.com/question/34074946)
 
 - 线头阻塞：TCP 连接上只能发送一个请求，前面的请求未完成前，后面的请求都得排队
 - 多个 TCP 连接：1.1 版本请求并发依赖于多个 TCP 连接，建立 TCP 连接成本很高，还会存在慢启动问题
