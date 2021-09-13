@@ -8,6 +8,7 @@
 - 返回新对象
 
 ```js
+// 1.
 function New(fn, ...args) {
   let o = {};
 
@@ -21,6 +22,16 @@ function New(fn, ...args) {
     return res;
   }
 
+  return o;
+}
+
+// 2.
+function New(fn, ...args) {
+  let o = Object.create(fn.prototype);
+  let res = fn.apply(o, args);
+  if (typeof res === 'object' && res !== null) {
+    return res;
+  }
   return o;
 }
 
@@ -68,6 +79,7 @@ console.log(instanceOf(a, Array));
 ## deepClone
 
 ```js
+// 1. 简单的
 function deepClone(obj) {
   if (!isObj(obj)) return obj;
 
@@ -82,6 +94,22 @@ function deepClone(obj) {
 
 function isObj(o) {
   return typeof o === "object" && o !== null;
+}
+
+// 2. 考虑引用和symbol的情况
+function deepClone(obj, hash = new WeakMap()) {
+  if(!isObj(obj)) return obj;
+  // 考虑引用
+  if(hash.has(obj)) {
+    return hash.get(obj)
+  }
+  const res = Array.isArray(obj) ? [] : {};
+  hash.set(obj, res);
+  
+  Reflect.ownKeys(obj).forEach((key) => {
+    res[key] = isObj(obj[key]) ? deepClone(obj[key]) : obj[key]
+  })
+  return res;
 }
 ```
 
@@ -108,11 +136,20 @@ class EventEmiter {
     this.events.set(ev, handlers ? handlers.concat(fn) : [fn]);
   }
 
-  remove(ev, fn) {
+  off(ev, fn) {
     const handlers = this.events.get(ev);
     const i = handlers.findIndex(fn);
     handlers.splice(i, 1);
     this.events.set(ev, handlers);
+  },
+
+  once(ev, fn) {
+    const _once = (...args) => {
+      fn && fn.apply(this, args);
+      this.off(ev, fn)
+    }
+
+    this.on(ev, _once)
   }
 }
 
@@ -129,7 +166,7 @@ event.on("click", function(v) {
 });
 
 event.emit("click", 2);
-event.remove("click", a);
+event.off("click", a);
 ```
 
 ## 大数相加
