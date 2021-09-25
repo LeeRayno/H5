@@ -4,8 +4,9 @@
 
 ## 闭包
 
-### 什么是闭包
+### 什么是闭包(从作用域去解释)
 
+[js 引擎的执行过程](https://heyingye.github.io/2018/03/19/js%E5%BC%95%E6%93%8E%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/)
 [JavaScript 闭包的底层运行机制](http://blog.leapoahead.com/2015/09/15/js-closure/)
 
 > 当函数可以 **记住** 并 **访问** 所在的词法作用域，即使函数是在当前词法作用域之外执行，这时就产生了闭包  
@@ -167,6 +168,8 @@ Function.__proto__ === Function.prototype;
 
 > 性能优化是软件工程永恒的话题，前端的性能优化大头基本上在网络这个层面
 
+- [指标](https://juejin.cn/post/6981673766178783262)
+- [React](https://juejin.cn/post/6844903640902156301)
 - 雅虎军规
 - 缓存
 - 图片懒加载
@@ -260,7 +263,7 @@ class PromiseSimple {
     this.resolve = this.resolve.bind(this);
     this.reject = this.reject.bind(this);
 
-    this.excuteFn(this.resolve, this.reject);
+    excuteFn(this.resolve, this.reject);
   }
 
   then(fn) {
@@ -304,7 +307,7 @@ Promise.all = function (promises) {
       Promise.resolve(p)
         .then((r) => {
           res[i] = r; // 用下标保证顺序
-          count ++;
+          count++;
           if (count === promises.length) {
             resolve(res); // 等到所有执行完了在resolve
           }
