@@ -447,6 +447,7 @@ function toSum(arr, target) {
 ## Vue vs React
 
 [原文](https://www.zhihu.com/question/301860721/answer/724759264)
+[你不知道的React 和 Vue 的20个区别【面试必备】](https://juejin.cn/post/6847009771355127822)
 
 1. 代码风格
    1. Vue template, 内置 v-for 等指令
@@ -461,6 +462,10 @@ function toSum(arr, target) {
 4. 预编译优化问题
 
 ### React 的特征是什么？
+
+[「2021」高频前端面试题汇总之React篇（上）](https://juejin.cn/post/6941546135827775525)
+[「2021」高频前端面试题汇总之React篇（下）](https://juejin.cn/post/6940942549305524238)
+[React 灵魂 23 问，你能答对几个？](https://zhuanlan.zhihu.com/p/304213203)
 
 React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美结合已提升性能
 状态提升(Lifting-state-up)、单项数据流、函数式编程风格、pull-base 系统(数据变化需要手动 setState 通知系统更新，而 Vue 响应式系统会自动更新)
