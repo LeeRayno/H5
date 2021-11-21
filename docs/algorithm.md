@@ -1,8 +1,8 @@
 # 基础算法
 
 [javascript-algorithms](https://github.com/trekhleb/javascript-algorithms)  
-[javascript-sorting](https://h3manth.com/javascript-sorting/)
-
+[javascript-sorting](https://h3manth.com/javascript-sorting/)  
+[codeTop](https://codetop.cc/home)
 [![alorithms](https://github.com/LeeRayno/H5/blob/master/img/algorithm.png?raw=true)](https://github.com/LeeRayno/H5/blob/master/img/algorithm.png?raw=true)
 
 ## 冒泡排序 -- Bubble Sort
@@ -189,5 +189,141 @@ function shellSort(arr) {
     }
   }
   return arr;
+}
+```
+
+## 简单
+
+### [1. 两数之和](https://leetcode-cn.com/problems/two-sum/)
+
+```js
+function twoSum(arr, target) {
+  let map = new Map();
+  for (let i = 0; i < arr.length; i++) {
+    if (map.has(target - nums[i])) {
+      return [map.get(target - nums[i]), 9];
+    } else {
+      map.set(nums[i], i);
+    }
+  }
+}
+```
+
+### [88. 合并两个有序数组](https://leetcode-cn.com/problems/merge-sorted-array/)
+
+```js
+/*
+ * 先填充 nums1
+ * 再用 arr.sort 排序
+ */
+function merge(nums1, m, nums2, n) {
+  for (let i = m; i < m + n; i++) {
+    nums1[i] = nums2[i - m];
+  }
+  nums1.sort((a, b) => a - b);
+}
+```
+
+### [112. 路径总和](https://leetcode-cn.com/problems/path-sum/)
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+
+/**
+ * 递归的出口在 叶子节点 并且和等于targetSum
+ * 叶子节点 是指没有子节点的节点。
+ */
+function hasPathSum(root, targetSum) {
+  let b = false;
+  function dfs(node, v) {
+    if (!node) return false;
+    const { left, right, val } = node;
+    // 出口
+    if (!left && !right && val + v === targetSum) {
+      b = true;
+    }
+
+    left && dfs(left, v + val);
+    right && dfs(right, v + val);
+  }
+
+  dfs(root, 0);
+  return b;
+}
+```
+
+类似的还有查找路径
+
+```js
+const arr = [
+  {
+    id: 1,
+    children: [
+      {
+        id: 12,
+      },
+    ],
+  },
+  {
+    id: 2,
+    children: [
+      {
+        id: 22,
+      },
+    ],
+  },
+];
+
+// 查找路径
+// findPath(arr, 12) => [1, 12]
+function findPath(arr, target) {
+  let path = [];
+  function dfs(arr, pre) {
+    arr.forEach(({ id, children }) => {
+      if (id === target) {
+        path.concat(pre);
+      } else {
+        children?.length && dfs(children, pre.concat(id));
+      }
+    });
+  }
+  dfs(arr, []);
+  return path;
+}
+
+// 铺平嵌套对象
+// flatPath(arr[0]) => {'id': 1, 'children.[0].id': 12}
+function flatPath(obj) {
+  let res = {};
+
+  function dfs(val, pre) {
+    const isArray = Array.isArray(val);
+
+    for (const k in val) {
+      const cur = val[k];
+      const key = pre
+        ? isArray
+          ? `${pre}.[${k}]`
+          : `${pre}.${k}`
+        : isArray
+        ? `[${k}]`
+        : k;
+      if (!isObj(cur)) {
+        res[key] = cur;
+      } else {
+        dfs(cur, key);
+      }
+    }
+  }
+
+  dfs(obj, "");
+  return res;
 }
 ```

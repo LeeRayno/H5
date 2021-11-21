@@ -6,11 +6,39 @@
 
 ### 什么是闭包(从作用域去解释)
 
-[js 引擎的执行过程](https://heyingye.github.io/2018/03/19/js%E5%BC%95%E6%93%8E%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/)
-[JavaScript 闭包的底层运行机制](http://blog.leapoahead.com/2015/09/15/js-closure/)
+- [js 引擎的执行过程](https://heyingye.github.io/2018/03/19/js%E5%BC%95%E6%93%8E%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/)  
+- [JavaScript 闭包的底层运行机制](http://blog.leapoahead.com/2015/09/15/js-closure/)
 
 > 当函数可以 **记住** 并 **访问** 所在的词法作用域，即使函数是在当前词法作用域之外执行，这时就产生了闭包  
 > 即函数在 **调用** 时可以访问他在 **定义** 时的词法作用域
+
+> 从`函数调用栈 call Stack` -> `执行上下文(Excute Context)` -> `VO` -> `作用域链(ScopeChain)` 这个链路去回答
+
+```js
+// 函数执行上下文
+FuncEC = {
+  // 变量对象
+  VO: {
+    // 函数接收的参数对象
+    arguments: {
+      a: undefined,
+      b: undefined,
+      length: 2
+    },
+
+    // 函数体里面声明的函数变量
+    foo: <function reference>,
+
+    // 函数体里面声明的 普通变量
+    num: undefined
+
+  },
+  // this 指向
+  this: window,
+  // 作用域链
+  ScopeChain: [VO(innerTest), AO(test), AO(global)],
+}
+```
 
 常见的如 函数作为返回值，函数作为参数传递
 
@@ -166,7 +194,15 @@ Function.__proto__ === Function.prototype;
 
 ## 性能优化
 
-> 性能优化是软件工程永恒的话题，前端的性能优化大头基本上在网络这个层面
+> 性能优化是一个系统性的工程，如果只看到局部，引入算法，当然是越快越好; 但从整体来看，在关键点引入缓存，可以秒杀N多算法，或另辟蹊径，探索事件的本质，可能用户要的并不是快……,性能优化是软件工程永恒的话题，前端的性能优化大头基本上在网络这个层面
+
+主要从以下几个方面去回答：
+[你会怎么做前端优化？](https://juejin.cn/post/7028028584463695879)
+1. 性能监控层面(性能、异常、用户行为)
+2. 代码开发层面
+3. 构建打包层面
+4. js 方面 防抖 之类
+5. css 方面 transform 提升合成层之类
 
 - [指标](https://juejin.cn/post/6981673766178783262)
 - [React](https://juejin.cn/post/6844903640902156301)
