@@ -529,6 +529,7 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 
 - [手写React的Fiber架构，深入理解其原理](https://juejin.cn/post/6844904197008130062)
 - [这可能是最通俗的 React Fiber(时间分片) 打开方式](https://juejin.cn/post/6844903975112671239)
+- [手写简易版React来彻底搞懂fiber](https://mp.weixin.qq.com/s/EKbd0Uxw0LWla61Ba2JeQw)
 
 背景： 
 - reconsiler + VD 的 diff 算法是采用循环递归的算法是同步的，如果有大量的节点需要更新，JS 线程运行的时间可能会很长，这段时间浏览器是不会响应其他事件的，因为 JS 线程和 GUI 线程是互斥的，所以运行JS线程时 GUI 渲染线程就不会执行 很容易造成卡顿。
@@ -539,7 +540,11 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 
 实现：
 
-- Fiber 就是用来解决这个问题的，Filber 可以将长任务拆分成多个小任务，从而可以让浏览器抽身去做其他高优的事情，等他空了再回来继续计算，
+- Fiber 就是用来解决这个问题的，Filber 可以将长任务拆分成多个小任务，从而可以让浏览器抽身去做其他高优的事情，等他空了再回来继续计算，主要有几个概念 `schedule` `reconcile` `commit`
+  - schedule 调度 通过 requestIDcallback 函数利用空闲时间 去 reconcile
+  - reconcile 调和 将 vdom 转换成 fiber 链表数据结构
+  - commit 提交 等到所有 vdom 都转换成 fiber 链表结构后，提交渲染
+
 
 
 ## 工程化
