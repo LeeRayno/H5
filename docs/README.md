@@ -2,6 +2,8 @@
 
 该文档采用 [docute](https://github.com/egoist/docute) 编写
 
+[面试搜集](https://juejin.cn/post/7061588533214969892?utm_source=gold_browser_extension)
+
 ## 闭包
 
 ### 什么是闭包(从作用域去解释)
@@ -174,7 +176,7 @@ Function.prototype.__proto__ === Object.prototype;
 Function.__proto__ === Function.prototype;
 ```
 
-![原型链](https://tva1.sinaimg.cn/large/007S8ZIlly1gg6t1tgsc9j30n00rsavw.jpg)
+![原型链](https://tva1.sinaimg.cn/large/008i3skNgy1gzc76bcuvzj30u011c423.jpg)
 
 ## GET & POST
 
@@ -223,10 +225,52 @@ Function.__proto__ === Function.prototype;
   - Canvas 模拟画板功能（mousemove）
   - 监听滚动事件判断是否到页面底部自动加载更多：给 scroll 加了 debounce 后，只有用户停止滚动后，才会判断是否到了页面底部；如果是 throttle 的话，只要页面滚动就会间隔一段时间判断一次
 
-## reflow、repaint
+## 从URL输入到页面展现到底发生什么？
+[过程](https://juejin.cn/post/6844903784229896199)
+- DNS 解析 (DNS 缓存、查找)
+- 发送HTTP请求 (缓存、HTTPS、HTTP2)
+- 建立TCP链接 (三次握手🤝，四次挥手👋🏻)
+- 浏览器解析渲染过程
+
+## DNS 解析
+- 先缓存在查找
+- DNS 缓存查找过程：浏览器缓存 👉🏻 本机缓存 👉🏻 host 文件 👉🏻 路由器缓存 👉🏻 ISP 缓存 然后才是DNS的递归查询或者迭代查询。
+- DNS域名解析分为`递归查询`和`迭代查询`两种方式，现一般为`迭代查询`。
+
+![dns](https://tva1.sinaimg.cn/large/008i3skNgy1gzc6rm1y16j30m80eegmw.jpg)
+
+## 渲染
+- [你不知道的浏览器页面渲染机制](https://juejin.cn/post/6844903815758479374?utm_source=gold_browser_extension)
+- [史上最全！图解浏览器的工作原理](https://www.infoq.cn/article/CS9-WZQlNR5h05HHDo1b)
+
+
+1. 解析 HTML，生成 DOM 树
+2. 解析 CSS，生成 CSSOM 树
+3. 合并 DOM 和 CSSOM 树，生成 render 树
+4. 布局render树（Layout/reflow），负责各元素尺寸、位置的计算
+5. 绘制render树（paint），绘制页面像素信息
+
+![render](https://tva1.sinaimg.cn/large/008i3skNgy1gzbs0k44d9j30p009s3yw.jpg)
+
+![tree](https://tva1.sinaimg.cn/large/008i3skNgy1gzc71rkx0fj30m80adwfd.jpg)
+
+
+
+## defer and async 
+[async vs defer attributes](https://www.growingwiththeweb.com/2014/02/async-vs-defer-attributes.html)  
+[图解 script 标签中的 async 和 defer 属性
+](https://juejin.cn/post/6894629999215640583)
+- `script` ：会阻碍 `HTML` 解析，只有下载好并执行完脚本才会继续解析 `HTML`。
+- `async script` ：解析 `HTML` 过程中进行脚本的异步下载，下载成功立马执行，有可能会阻断 `HTML` 的解析。 (延迟加载，立即执行)。
+- `defer script`：完全不会阻碍 `HTML` 的解析，解析完成之后再按照顺序执行脚本。(延迟加载，异步执行)
+
+![defer&async](https://tva1.sinaimg.cn/large/008i3skNgy1gzbs436a00j30s90fsmy0.jpg)
+
+## reflow & repaint
 
 > 回流、重绘
 
+[What forces layout / reflow](https://gist.github.com/paulirish/5d52fb081b3570c81e3a)
 [segmengfaulf](https://segmentfault.com/a/1190000008849210)
 [掘金](https://juejin.im/post/5ca0c0abe51d4553a942c17d?utm_source=gold_browser_extension)
 
@@ -248,7 +292,7 @@ reflow 在渲染过程中称为回流，发生在 Render Tree 阶段，它主要
 
 ### repaint
 
-erpaint 在渲染过程称为重绘，发生在 reflow 之后，当元素的集合属性确定之后便要开始将元素绘制在屏幕上，repaint 执行过程就是将元素的色彩(背景色，颜色等)属性绘制出来，**每改变一次颜色属性，均会对相关元素执行一次重绘**
+repaint 在渲染过程称为重绘，发生在 reflow 之后，当元素的集合属性确定之后便要开始将元素绘制在屏幕上，repaint 执行过程就是将元素的色彩(背景色，颜色等)属性绘制出来，**每改变一次颜色属性，均会对相关元素执行一次重绘**
 
 #### 如何触发回流，重绘
 
