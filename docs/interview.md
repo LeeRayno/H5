@@ -530,6 +530,7 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 - [手写React的Fiber架构，深入理解其原理](https://juejin.cn/post/6844904197008130062)
 - [这可能是最通俗的 React Fiber(时间分片) 打开方式](https://juejin.cn/post/6844903975112671239)
 - [手写简易版React来彻底搞懂fiber](https://mp.weixin.qq.com/s/EKbd0Uxw0LWla61Ba2JeQw)
+- [build-your-own-react](https://pomb.us/build-your-own-react/)
 
 背景： 
 - reconsiler + VD 的 diff 算法是采用循环递归的算法是同步的，如果有大量的节点需要更新，JS 线程运行的时间可能会很长，这段时间浏览器是不会响应其他事件的，因为 JS 线程和 GUI 线程是互斥的，所以运行JS线程时 GUI 渲染线程就不会执行 很容易造成卡顿。
