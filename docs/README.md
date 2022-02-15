@@ -332,7 +332,8 @@ ele.classList.add("className");
 
 ## Promise
 
-简易实现 promise [原文链接](https://levelup.gitconnected.com/understand-javascript-promises-by-building-a-promise-from-scratch-84c0fd855720)
+- 简易实现 promise [原文链接](https://levelup.gitconnected.com/understand-javascript-promises-by-building-a-promise-from-scratch-84c0fd855720)
+- [Promise 45 道面试题](https://juejin.cn/post/6844904077537574919)
 
 ```js
 class PromiseSimple {
