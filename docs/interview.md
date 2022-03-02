@@ -559,9 +559,55 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 
 1. 开发 (模块化/组件化/脚手架)
 2. 测试 (自动化测试)
-3. 构建 
+3. 构建 (webpack/vite)
 4. 部署 (CI/CD)
 5. 监控 (性能/异常/行为)
+
+### webpack
+
+- webpack 优化主要分为`打包过程中`的速度优化，和`打包完之后的产物大小`优化 [webpack](https://juejin.cn/post/7016593221815910408#heading-84)
+- 打包过程主要用 [speed-measure-webpack-plugin](https://www.npmjs.com/package/speed-measure-webpack-plugin) 插件来分析打包过程，然后再去对具体的某个loader或plugin做优化
+- 打包之后主要用 [webpack-bundle-analyzer](https://www.npmjs.com/package/speed-measure-webpack-plugin) 插件来分析打包之后的大小，然后根据包的大小去做代码层面的优化
+
+#### 优化构建速度
+1. 使用高版本的webpack，原因如下
+   1. v8 带来的优化，for of 替代 forEach; Map, Set 替代 Object; includes 替代 indexOf
+   2. 默认使用更快的md4 hash 算法
+   3. webpack AST 可以直接从loader传递给AST,减少解析时间
+   4. 使用字符串方法替代正则表达式
+2. 开启多线程打包 happypack,thread-loader
+3. 减少文件搜索范围
+   1. exclude/include(确定 loader 规则范围)
+   2. resolve.modules 指明第三方的绝对路径减少不必要的查找
+   3. resolve.extensions 尽可能的减少后缀尝试的可能性
+   4. noParse 对完全不需要解析的库进行忽略(不去解析但仍会打包到bundle中，注意被忽略掉的文件里不应该包含import,require,define等模块化语句)
+   5. ignorePlugin (完全排除模块)
+   6. 合理使用alias
+4. 利用缓存cache-loader提升二次构建速度
+   1. babel-loader 开启缓存
+   2. 使用 cache-loader 或者 hard-source-webpack-plugin
+   3. 注意：thread-loader 和 cache-loader 兩個要一起使用的話，請先放 cache-loader 接著是 thread-loader 最後才是 heavy-loader
+5. DLL 动态链接库
+   1. 使用DllPlugin 进行分包，使用DllReferencePlugin(索引链接)对manifest.json引用，让一些基本不会改动的代码先打包成静态资源，避免反复编译浪费时间
+6. externals 不去打包，让资源走CDN
+
+#### 优化打包体积
+1. 压缩代码terser-webpack-plugin
+2. 提取页面公共资源
+3. Tree shaking
+4. Scope hosting
+5. 图片压缩
+6. 动态polyfill
+
+### babel
+简述一下babel的编译过程：babel 是一个 JavaScript 编译器，是一个工具链，主要用于将 高版本的语法编译为低版本的语法，以便能够运行在当前和旧版本的浏览器或其他环境中。
+babel的功能很纯粹，他只是一个编译器，大多数的编译过程分为三部分：
+1. 解析(parse)：将源代码转换成AST(抽象语法树),包括词法分析和语法分析。词法分析主要把字符流源代码（Char Stream）转换成令牌流（ Token Stream），语法分析主要是将令牌流转换成抽象语法树（Abstract Syntax Tree，AST）。
+2. 转换(transform)：通过 Babel 的插件能力，对（抽象语法树）做一些特殊处理，将高版本语法的 AST 转换成支持低版本语法的 AST。让它符合编译器的期望，当然在此过程中也可以对 AST 的 Node 节点进行优化操作，比如添加、更新以及移除节点等。
+3. 生成(generate)：将 AST 转换成字符串形式的低版本代码，同时也能创建 Source Map 映射。
+
+![babel1](https://tva1.sinaimg.cn/large/e6c9d24egy1gzvuk0i4i5j20kx0cpt9n.jpg)
+![babel2](https://tva1.sinaimg.cn/large/e6c9d24egy1gzvukjjt97j20l70bjq3y.jpg)
 
 ## 项目
 ### 介绍项目
@@ -579,6 +625,7 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 3. 回放
    1. 背景：当我们遇到用户反馈线上问题或者报警时，我们很想知道用户当时是怎么操作的。很想复现当时的场景
    2. 解决：用rrweb实现录制与回放，并且后续可以定制一些特殊的场景，比如某个链路操作耗时，可以进行产品层面的优化，某个模块使用的人数多少
+   3. 收益：在这个过程中遇到了一些问题去GitHub提了几个issue
 
 ### 典型问题
 技术探底的问题肯定会问一些，此外面试每个人多会问：
@@ -586,6 +633,9 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 2. 让你印象最深刻的一个（技术）难点，害的你搞了很久，最后怎么解的，有什么心得？
 3. 你做的时间最久的一个项目（或产品），你看到这个项目有哪些问题，你能做什么？
 4. 你能给我们团队或者产品带来什么？
+5. 你有什么优点，亮点？
+   1. 会尽量根据业务去做一些提效的工具，比如写一个适合业务线的脚手架，会去封装一些基础的组件，我们有一个专门统计业务使用组件的文档，95%以上都是我写的。
+   2. 会去解决一些其他人不愿去解决的问题，比如 antd3 表单嵌套的问题比较难处理，就去issue里面搜 nested 找到了解决办法 [nested](https://github.com/ant-design/ant-design/issues/7228)
 
 ### 你有什么要问我的吗
 1. 对我的评价，有哪些不足，需要增强的地方
