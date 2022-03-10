@@ -2,6 +2,7 @@
 
 [一份优秀的前端开发工程师简历是怎么样的？](https://www.zhihu.com/question/23150301)
 ![project](https://tva1.sinaimg.cn/large/e6c9d24ely1h005nlgo4ej214y0nsgo1.jpg)
+[前端试炼](https://mp.weixin.qq.com/s/m7eMwAKj0akwlpzh9Ye0pg)
 
 
 ## 遍历 DOM 树
