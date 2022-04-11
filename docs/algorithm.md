@@ -328,3 +328,146 @@ function flatPath(obj) {
   return res;
 }
 ```
+
+## 链表
+
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+```
+
+### 反转链表
+
+```js
+/**
+ * https://leetcode-cn.com/problems/UHnkqh/
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var reverseList = function (head) {
+  let prev = null;
+  let cur = head;
+  let next = null;
+  while (cur) {
+    next = cur.next;
+    cur.next = prev;
+    prev = cur;
+    cur = next;
+  }
+
+  return prev;
+};
+```
+
+### 回文链表
+
+```js
+/**
+ * https://leetcode-cn.com/problems/aMhZSa/
+ * @param {ListNode} head
+ * @return {boolean}
+ */
+var isPalindrome = function (head) {
+  let stack = [];
+  let cur = head;
+
+  while (cur) {
+    stack.push(cur.val);
+    cur = cur.next;
+  }
+
+  let i = 0;
+  let j = stack.length - 1;
+
+  while (i <= j) {
+    if (stack[i] !== stack[j]) {
+      return false;
+    }
+    i++;
+    j--;
+  }
+  return true;
+};
+```
+
+### 循环链表
+
+> 龟兔晒跑法
+
+```js
+/**
+ * [快指针每次跑两个，满指针](https://leetcode-cn.com/problems/linked-list-cycle/solution/huan-xing-lian-biao-by-leetcode-solution/)
+ *
+ */
+function hasCycle(head) {
+  let slower = head;
+  let faster = head;
+
+  while (faster && faster.next) {
+    faster = faster.next.next;
+    slower = slower.next;
+    if (slower === faster) return true;
+  }
+  return false;
+}
+```
+
+### 倒数第 K 个元素
+
+```js
+/**
+ * https://leetcode-cn.com/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/
+ * 快指针先跑 K 个。这样快慢指针相差 K 个位置，然后在一起跑。快指针跑到末尾了，慢指针就是在 倒数 K 个位置
+ * @param {ListNode} head
+ * @param {number} k
+ * @return {ListNode}
+ */
+var getKthFromEnd = function (head, k) {
+  // let stack = [];
+  // let cur = head;
+  // while (cur) {
+  //     stack.push(cur);
+  //     cur = cur.next
+  // };
+  // return stack[stack.length - k]
+
+  let slower = head;
+  let faster = head;
+
+  while (k--) {
+    faster = faster.next;
+  }
+
+  while (faster) {
+    faster = faster.next;
+    slower = slower.next;
+  }
+
+  return slower;
+};
+```
+
+### 876. 链表的中间结点
+
+```js
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var middleNode = function (head) {
+  let slower = head;
+  let faster = head;
+
+  while (faster && faster.next) {
+    faster = faster.next.next;
+    slower = slower.next;
+  }
+
+  return slower;
+};
+```
