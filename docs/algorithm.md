@@ -417,6 +417,32 @@ function hasCycle(head) {
 }
 ```
 
+### 相交链表
+
+```js
+/**
+ * @param {ListNode} headA
+ * @param {ListNode} headB
+ * @return {ListNode}
+ */
+var getIntersectionNode = function (headA, headB) {
+  let set = new Set();
+  let A = headA;
+  let B = headB;
+
+  while (A) {
+    set.add(A);
+    A = A.next;
+  }
+
+  while (B) {
+    if (set.has(B)) return B;
+    B = B.next;
+  }
+  return null;
+};
+```
+
 ### 倒数第 K 个元素
 
 ```js
@@ -468,6 +494,83 @@ var middleNode = function (head) {
     slower = slower.next;
   }
 
+  // 如果 faster 不为 null 说明是基数， slower 往后移动一个
+  if (faster) {
+    slower = slower.next;
+  }
+
   return slower;
+};
+```
+
+### 合并两个升序链表
+
+```js
+/**
+ * https://leetcode-cn.com/problems/he-bing-liang-ge-pai-xu-de-lian-biao-lcof/
+ * @param {ListNode} l1
+ * @param {ListNode} l2
+ * @return {ListNode}
+ */
+var mergeTwoLists = function (l1, l2) {
+  if (!l1) return l2;
+  if (!l2) return l1;
+
+  let res = l1.val < l2.val ? l1 : l2;
+  res.next = mergeTwoLists(res.next, l1.val < l2.val ? l2 : l1);
+
+  return res;
+};
+```
+
+## 字符串
+
+### 最长回文字符串
+
+### 无重复最长子串
+
+```js
+/**
+ * https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/
+ * @param {string} s
+ * @return {number}
+ */
+var lengthOfLongestSubstring = function (s) {
+  let res = 0;
+  let str = "";
+
+  for (let i = 0; i < s.length; i++) {
+    const cur = str[i];
+    const index = str.indexOf(cur);
+    if (index < 0) {
+      str += cur;
+      res = Math.max(res, str.length);
+    } else {
+      str = str.slice(index + 1) + cur;
+    }
+  }
+
+  return res;
+};
+```
+
+### 最长递增序列
+
+```js
+/**
+ * https://leetcode-cn.com/problems/longest-continuous-increasing-subsequence/
+ * @param {number[]} nums
+ * @return {number}
+ */
+var findLengthOfLCIS = function (nums) {
+  let res = 0;
+  let start = 0;
+  for (let i = 0; i < nums.length; i++) {
+    if (i > 0 && nums[i] <= nums[i - 1]) {
+      start = i;
+    }
+    res = Math.max(res, i - start + 1);
+  }
+  return res;
 };
 ```
