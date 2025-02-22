@@ -105,7 +105,7 @@ function debounce(cb, delay = 300) {
 
 ```js
 // 说出打印顺序
-// https://mp.weixin.qq.com/s/UEsTQjoSbOFh3nv7_TePfg
+// @see https://mp.weixin.qq.com/s/UEsTQjoSbOFh3nv7_TePfg
 function Foo() {
   getName = function () {
     alert(1);
