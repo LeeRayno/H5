@@ -176,7 +176,7 @@ Function.prototype.__proto__ === Object.prototype;
 Function.__proto__ === Function.prototype;
 ```
 
-![原型链](https://tva1.sinaimg.cn/large/008i3skNgy1gzc76bcuvzj30u011c423.jpg)
+![prototype](../img//prototype.png)
 
 ## GET & POST
 

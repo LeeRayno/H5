@@ -1,0 +1,32 @@
+graph TD
+    A[客户端发起 HTTP 请求] --> B{是否有缓存?}
+    B -->|无缓存| C[向服务器发送请求]
+    B -->|有缓存| D{缓存是否过期?}
+    D -->|未过期| E[使用强制缓存]
+    D -->|已过期| F{是否有 ETag 或 Last-Modified?}
+    F -->|无 ETag/Last-Modified| C
+    F -->|有 ETag/Last-Modified| G[向服务器发送条件请求]
+    G --> H{服务器资源是否修改?}
+    H -->|未修改| I[返回 304 Not Modified]
+    H -->|已修改| J[返回新资源]
+    I --> K[使用本地缓存]
+    J --> L[更新缓存]
+    C --> M[服务器返回新资源]
+    M --> N[缓存新资源]
+    N --> O[返回资源给客户端]
+    E --> P[返回缓存资源给客户端]
+    K --> P
+    L --> P
+
+    subgraph 强制缓存
+        D --> E
+    end
+
+    subgraph 协商缓存
+        F --> G --> H --> I --> K
+        H --> J --> L
+    end
+
+    subgraph 无缓存
+        B --> C --> M --> N --> O
+    end

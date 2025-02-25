@@ -1,0 +1,37 @@
+graph TD
+    A[初始化] --> B[读取配置文件 webpack.config.js]
+    B --> C[解析配置参数]
+    C --> D[创建 Compiler 对象]
+    D --> E[加载插件]
+    E --> F[开始编译]
+    F --> G[从入口文件开始解析]
+    G --> H[解析模块依赖]
+    H --> I[使用 Loader 处理模块]
+    I --> J[生成 AST 抽象语法树]
+    J --> K[遍历 AST 收集依赖]
+    K --> L[递归处理所有依赖模块]
+    L --> M[生成 Chunk]
+    M --> N[优化 Chunk]
+    N --> O[生成资源文件]
+    O --> P[写入文件系统]
+    P --> Q[完成编译]
+    Q --> R[触发插件生命周期钩子]
+    R --> S[输出打包结果]
+    S --> T[结束]
+
+    subgraph 编译阶段
+        F --> G --> H --> I --> J --> K --> L --> M
+    end
+
+    subgraph 优化阶段
+        M --> N
+    end
+
+    subgraph 输出阶段
+        N --> O --> P --> Q
+    end
+
+    subgraph 插件阶段
+        Q --> R --> S
+    end
+
