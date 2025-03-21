@@ -29,7 +29,7 @@ function New(fn, ...args) {
 function New(fn, ...args) {
   let o = Object.create(fn.prototype);
   let res = fn.apply(o, args);
-  if (typeof res === 'object' && res !== null) {
+  if (typeof res === "object" && res !== null) {
     return res;
   }
   return o;
@@ -98,22 +98,22 @@ function isObj(o) {
 
 // 2. 考虑引用和symbol的情况
 function deepClone(obj, hash = new WeakMap()) {
-  if(!isObj(obj)) return obj;
+  if (!isObj(obj)) return obj;
   // 考虑引用
-  if(hash.has(obj)) {
-    return hash.get(obj)
+  if (hash.has(obj)) {
+    return hash.get(obj);
   }
   const res = Array.isArray(obj) ? [] : {};
   hash.set(obj, res);
-  
+
   Reflect.ownKeys(obj).forEach((key) => {
-    res[key] = isObj(obj[key]) ? deepClone(obj[key]) : obj[key]
-  })
+    res[key] = isObj(obj[key]) ? deepClone(obj[key]) : obj[key];
+  });
   return res;
 }
 ```
 
-## pub/sub
+## EventEmit - 观察者模式 👀
 
 > emit 时 循环执行函数，on 的时候添加函数，原理类似 promise 的 then 添加 和 resolve 执行
 
@@ -169,28 +169,92 @@ event.emit("click", 2);
 event.off("click", a);
 ```
 
+## Pub/Sub - 发布订阅者模式
+
+```js
+// 发布者
+class Publisher {
+  constructor(pubsuber) {
+    this.pubsuber = pubsuber;
+  }
+
+  publish(type, message) {
+    this.pubsuber.publish(type, message);
+  }
+}
+
+// 订阅者
+class Subscriber {
+  constructor(pubsuber) {
+    this.pubsuber = pubsuber;
+  }
+
+  subscribe(type, listenter) {
+    this.pubsuber.subscribe(type, listenter);
+  }
+}
+
+// 中间人
+class PubSub {
+  constructor() {
+    this.messages = {};
+    this.listenters = {};
+  }
+
+  publish(type, message) {
+    this.messages[type] = (this.messages[type] || []).concat(message);
+  }
+
+  subscribe(type, listenter) {
+    this.listenters[type] = (this.listenters || []).concat(listenter);
+  }
+
+  notify(type) {
+    const message = this.messages[type];
+    const listenters = this.listenters[type] || [];
+
+    listenters.forEach((fn) => fn(message));
+  }
+}
+
+// Demo
+const pubsuber = new PubSub();
+
+const publisher = new Publisher(pubsuber);
+const subscriber = new Subscriber(pubsuber);
+
+const TYPE = "A";
+
+publisher.publish(TYPE, "message A");
+subscriber.subscribe(TYPE, (v) => {
+  console.log(v);
+});
+
+pubsuber.notify(type);
+```
+
 ## 大数相加
 
 > 非常大的数字相加，转为字符串形式相加
 
 ```js
 function bigNumberSum(a, b) {
-  a = a + '';
-  b = b + '';
+  a = a + "";
+  b = b + "";
 
   // const diff = Math.abs(a.length - b.length);
   // const prefix = '0'.repeat(diff);
 
   // a.length > b.length ? (b = prefix + b) : (a = prefix + a);
   const length = Math.max(a.length, b.length);
-  a = a.padStart(length, '0');
-  b = b.padStart(length, '0');
+  a = a.padStart(length, "0");
+  b = b.padStart(length, "0");
 
   // console.log(a);
   // console.log(b);
 
   let carry = 0; // 进位
-  let res = '';
+  let res = "";
 
   for (let i = a.length - 1; i >= 0; i--) {
     const sum = Number(a[i]) + Number(b[i]) + carry;

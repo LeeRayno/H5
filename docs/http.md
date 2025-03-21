@@ -133,13 +133,13 @@ HTTP 缓存分为强制缓存和协商缓存
 
 ![TCP/IP](https://tva1.sinaimg.cn/large/007S8ZIlly1ggpfwr4p35j30fs0ea4g2.jpg)
 
-- 物理层（网络电缆/ wifi）
-- 数据链路层（以太网）
-- 网络层（IPv4）
-- 传输层（TCP）
-- 会话层（SSL）
-- 表示层
-- 应用层（HTTP）
+- 物理层（网络电缆/ wifi）- 负责物理介质的传输，如电缆、光纤、无线电波等。
+- 数据链路层（以太网）- 提供节点到节点的数据传输，如 Ethernet、PPP 等。
+- 网络层（IPv4）- 负责数据包的路由和转发，如 IP、ICMP、ARP 等。
+- 传输层（TCP）- 提供端到端的通信，如 TCP、UDP 等。
+- 会话层（SSL）- 管理会话和连接，如 RPC、NetBIOS 等。
+- 表示层 - 负责数据格式转换和加密，如 SSL、TLS、JPEG 等。
+- 应用层（HTTP）- 提供网络服务给应用程序，如 HTTP、FTP、SMTP 等。
 
 ## HTTP2.0
 

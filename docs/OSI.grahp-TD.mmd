@@ -1,0 +1,15 @@
+graph TD
+    A[应用层] --> B[表示层]
+    B --> C[会话层]
+    C --> D[传输层]
+    D --> E[网络层]
+    E --> F[数据链路层]
+    F --> G[物理层]
+
+    A -->|HTTP, FTP, SMTP| A
+    B -->|SSL, TLS, JPEG| B
+    C -->|RPC, NetBIOS| C
+    D -->|TCP, UDP| D
+    E -->|IP, ICMP, ARP| E
+    F -->|Ethernet, PPP| F
+    G -->|电缆, 光纤, 无线电波| G

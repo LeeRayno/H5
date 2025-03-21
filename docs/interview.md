@@ -4,7 +4,6 @@
 ![project](https://tva1.sinaimg.cn/large/e6c9d24ely1h005nlgo4ej214y0nsgo1.jpg)
 [前端试炼](https://mp.weixin.qq.com/s/m7eMwAKj0akwlpzh9Ye0pg)
 
-
 ## 遍历 DOM 树
 
 ### 求 html 出现次数最多的标签
@@ -494,6 +493,8 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 
 ### Diff 算法如何运作？
 
+![diff](./diff-progress.png)
+
 传统的 diff 算法采用`循环递归`对节点进行依次对比，效率低下，算法复杂度达到 O(n^3)，其中 n 是树节点的总数，O(n^3) 到底有多可怕，这意味着如果要展示 1000 个节点，就要依次执行上十亿次的比较。这种指数型的性能消耗对于前端渲染场景来说代价太高了！现今的 CPU 每秒钟能执行大约 30 亿条指令，即便是最高效的实现，也不可能在一秒内计算出差异情况。而 React 制定大胆的策略，将 O(n^3) 复杂度的问题转换为 O(n) 复杂度的问题。
 
 1. Tree Diff: Web UI 中 DOM 节点跨层级移动操作特别少，可以忽略不计(如果出现了，就删除重建)
@@ -528,8 +529,6 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 
 ## React Hooks
 
-
-
 ## React Fiber
 
 - [手写React的Fiber架构，深入理解其原理](https://juejin.cn/post/6844904197008130062)
@@ -537,10 +536,12 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 - [手写简易版React来彻底搞懂fiber](https://mp.weixin.qq.com/s/EKbd0Uxw0LWla61Ba2JeQw)
 - [build-your-own-react](https://pomb.us/build-your-own-react/)
 
-背景： 
+背景：
+
 - reconsiler + VD 的 diff 算法是采用循环递归的算法是同步的，如果有大量的节点需要更新，JS 线程运行的时间可能会很长，这段时间浏览器是不会响应其他事件的，因为 JS 线程和 GUI 线程是互斥的，所以运行JS线程时 GUI 渲染线程就不会执行 很容易造成卡顿。
 
 目标：
+
 1. 新的任务调度，有高优先级任务的时候将浏览器让出来，等浏览器空了在继续执行 `requestIdleCallback`
 2. 新的数据结构 `链表`，可以随时中断，下次进来可以继续执行 (`异步可中断执行`)
 
@@ -552,12 +553,14 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
   - commit 提交 等到所有 vdom 都转换成 fiber 链表结构后，提交渲染
 
 ## 微前端
+
 ![微前端](https://tva1.sinaimg.cn/large/e6c9d24egy1gzuqs4jkbkj20r80bo75l.jpg)
+
 1. [30分钟快速掌握微前端qiankun的所有核心技术](https://ths.js.org/2021/01/31/30%E5%88%86%E9%92%9F%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1%E5%BE%AE%E5%89%8D%E7%AB%AFqiankun%E7%9A%84%E6%89%80%E6%9C%89%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/)
 2. [微前端解决方案](https://segmentfault.com/a/1190000040275586)
 
-
 ## 工程化
+
 典型的前端工作流如下，从脚手架到监控系统，配套的前端工程化体系已经融入到前端工作的每个环节，很大程度的决定着前端生产效率
 
 1. 开发 (模块化/组件化/脚手架)
@@ -573,6 +576,7 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 - 打包之后主要用 [webpack-bundle-analyzer](https://www.npmjs.com/package/speed-measure-webpack-plugin) 插件来分析打包之后的大小，然后根据包的大小去做代码层面的优化
 
 #### 优化构建速度
+
 1. 使用高版本的webpack，原因如下
    1. v8 带来的优化，for of 替代 forEach; Map, Set 替代 Object; includes 替代 indexOf
    2. 默认使用更快的md4 hash 算法
@@ -595,6 +599,7 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 6. externals 不去打包，让资源走CDN
 
 #### 优化打包体积
+
 1. 压缩代码terser-webpack-plugin
 2. 提取页面公共资源
 3. Tree shaking
@@ -603,8 +608,10 @@ React 中最值得称道的部分莫过于 Virtual DOM 和 diff 算法的完美�
 6. 动态polyfill
 
 ### babel
+
 简述一下babel的编译过程：babel 是一个 JavaScript 编译器，是一个工具链，主要用于将 高版本的语法编译为低版本的语法，以便能够运行在当前和旧版本的浏览器或其他环境中。
 babel的功能很纯粹，他只是一个编译器，大多数的编译过程分为三部分：
+
 1. 解析(parse)：将源代码转换成AST(抽象语法树),包括词法分析和语法分析。词法分析主要把字符流源代码（Char Stream）转换成令牌流（ Token Stream），语法分析主要是将令牌流转换成抽象语法树（Abstract Syntax Tree，AST）。
 2. 转换(transform)：通过 Babel 的插件能力，对（抽象语法树）做一些特殊处理，将高版本语法的 AST 转换成支持低版本语法的 AST。让它符合编译器的期望，当然在此过程中也可以对 AST 的 Node 节点进行优化操作，比如添加、更新以及移除节点等。
 3. 生成(generate)：将 AST 转换成字符串形式的低版本代码，同时也能创建 Source Map 映射。
@@ -613,7 +620,9 @@ babel的功能很纯粹，他只是一个编译器，大多数的编译过程分
 ![babel2](https://tva1.sinaimg.cn/large/e6c9d24egy1gzvukjjt97j20l70bjq3y.jpg)
 
 ## 项目
+
 ### 介绍项目
+
 从`产品`、`业务`等形态去介绍比如分为`移动端`和`PC端`、再分模块功能介绍
 
 1. 在线教育直播`mu38`流
@@ -631,7 +640,9 @@ babel的功能很纯粹，他只是一个编译器，大多数的编译过程分
    3. 收益：在这个过程中遇到了一些问题去GitHub提了几个issue
 
 ### 典型问题
+
 技术探底的问题肯定会问一些，此外面试每个人多会问：
+
 1. 哪个项目让你最满意、代表你的最高水平？如何做的？
 2. 让你印象最深刻的一个（技术）难点，害的你搞了很久，最后怎么解的，有什么心得？
 3. 你做的时间最久的一个项目（或产品），你看到这个项目有哪些问题，你能做什么？
@@ -641,6 +652,7 @@ babel的功能很纯粹，他只是一个编译器，大多数的编译过程分
    2. 会去解决一些其他人不愿去解决的问题，比如 antd3 表单嵌套的问题比较难处理，就去issue里面搜 nested 找到了解决办法 [nested](https://github.com/ant-design/ant-design/issues/7228)
 
 ### 你有什么要问我的吗
+
 1. 对我的评价，有哪些不足，需要增强的地方
 2. 技术栈、基建等情况
 3. 团队梯度，等级占比，氛围等情况，希望打造怎样的一个团队
@@ -649,6 +661,7 @@ babel的功能很纯粹，他只是一个编译器，大多数的编译过程分
 6. 业务价值与规划是怎样的，目前是怎样的，里程碑
 
 ### 团队建设
+
 1. 组件团队
 2. 培养中坚骨干力量
 3. 团队氛围培养
@@ -656,6 +669,7 @@ babel的功能很纯粹，他只是一个编译器，大多数的编译过程分
 5. 出方案，推执行，Release 结果
 
 ### 技术广度与深度
+
 `你知道的越多，你不知道的就越多`
 
 1. `T`字形分布

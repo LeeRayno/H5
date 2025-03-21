@@ -1,0 +1,62 @@
+graph TD
+    A[setState 或 props 更新] --> B[创建更新对象]
+    B --> C[将更新对象加入更新队列]
+    C --> D[调度更新]
+    D --> E[开始调度]
+    E --> F[进入调度循环]
+    F --> G[开始工作循环]
+
+    %% Fiber 调度和调和过程
+    G --> H[获取下一个 Fiber 节点]
+    H --> I{是否有 Fiber 节点?}
+    I -- 是 --> J[开始处理 Fiber 节点]
+    I -- 否 --> K[结束工作循环]
+
+    %% Fiber 节点处理
+    J --> L[调用 beginWork]
+    L --> M[判断节点类型]
+    M --> N{节点类型?}
+    N -- HostComponent --> O[处理 DOM 节点]
+    N -- ClassComponent --> P[更新实例状态并调用 render]
+    N -- FunctionComponent --> Q[调用函数组件]
+
+    %% 生成新的 Virtual DOM
+    P --> R[生成新的 Virtual DOM]
+    Q --> R
+    R --> S[调用 reconcileChildren]
+
+    %% Virtual DOM Diff 过程
+    S --> T[开始 Diff 过程]
+    T --> U[Tree Diff]
+    U --> V[比较树的层级结构]
+    V --> W[标记需要更新的节点]
+    T --> X[Component Diff]
+    X --> Y[比较组件类型]
+    Y --> Z{组件类型是否相同?}
+    Z -- 是 --> AA[继续 Diff 子节点]
+    Z -- 否 --> AB[卸载旧组件, 挂载新组件]
+    T --> AC[Element Diff]
+    AC --> AD[比较元素的 key 和 type]
+    AD --> AE{key 和 type 是否相同?}
+    AE -- 是 --> AF[复用节点]
+    AE -- 否 --> AG[创建新节点, 销毁旧节点]
+
+    %% 生成 Fiber 子节点
+    AA --> AH[生成 Fiber 子节点]
+    AF --> AH
+    AG --> AH
+    AH --> AI[标记副作用]
+
+    %% 完成 Fiber 节点处理
+    AI --> AJ[调用 completeWork]
+    AJ --> AK[更新 DOM 节点]
+    AK --> AL[返回父 Fiber 节点]
+    AL --> H
+
+    %% 提交阶段
+    K --> AM[提交阶段开始]
+    AM --> AN[处理副作用]
+    AN --> AO[更新 DOM]
+    AO --> AP[调用生命周期方法]
+    AP --> AQ[结束提交阶段]
+    AQ --> AR[渲染完成]
