@@ -176,7 +176,7 @@ Function.prototype.__proto__ === Object.prototype;
 Function.__proto__ === Function.prototype;
 ```
 
-![prototype](../img//prototype.png)
+![prototype](./img//prototype.webp)
 
 ## GET & POST
 
